@@ -2,6 +2,7 @@
 
 #include <oui/file_system.h>
 #include <oui/script/script_highlighter.h>
+#include <oui/translation.h>
 
 #include <algorithm>
 #include <cctype>
@@ -30,7 +31,7 @@ using oui::script::Value;
     }
     if(!value.is_array())
     {
-        throw ScriptError{what + " must be a list of strings"};
+        throw ScriptError{oui::format_text(oui::translate("Scripts", "{0} must be a list of strings"), {what})};
     }
     for(std::size_t index{}; index < value.length(); ++ index)
     {
@@ -41,20 +42,31 @@ using oui::script::Value;
 
 } // namespace
 
-void Languages::add(const Value& definition)
+void Languages::add(const Value& definition, std::string_view language_code)
 {
     if(!definition.is_object())
     {
-        throw ScriptError{"a language is an object such as {id: \"cpp\", extensions: [\".cpp\"], states: {...}}"};
+        throw ScriptError{oui::translate(
+            "Scripts", "a language is an object such as {id: \"cpp\", extensions: [\".cpp\"], states: {...}}")};
     }
     auto language{std::make_shared<Language>()};
     language->id = definition.get("id").to_string();
     if(definition.get("id").is_undefined() || language->id.empty())
     {
-        throw ScriptError{"a language needs an id"};
+        throw ScriptError{oui::translate("Scripts", "a language needs an id")};
     }
-    const auto where{"language " + language->id};
-    language->name = definition.get("name").is_undefined() ? language->id : definition.get("name").to_string();
+    const auto where{oui::format_text(oui::translate("Scripts", "language {0}"), {language->id})};
+    // Like a command's title, one per language: {en: "Configuration", es: "Configuración"}.
+    const auto name{definition.get("name")};
+    if(name.is_object())
+    {
+        const auto translated{name.get(language_code)};
+        language->name = (translated.is_undefined() ? name.get("en") : translated).to_string();
+    }
+    else
+    {
+        language->name = name.is_undefined() ? language->id : name.to_string();
+    }
     for(auto& extension : strings_of(definition.get("extensions"), where + ": extensions"))
     {
         if(!extension.empty())
@@ -71,7 +83,9 @@ void Languages::add(const Value& definition)
     {
         if(pair.size() != 2)
         {
-            throw ScriptError{where + ": a bracket pair is two characters, such as \"()\", not \"" + pair + "\""};
+            throw ScriptError{oui::format_text(
+                oui::translate("Scripts", "{0}: a bracket pair is two characters, such as \"()\", not \"{1}\""),
+                {where, pair})};
         }
         language->brackets.emplace_back(pair[0], pair[1]);
     }
@@ -84,7 +98,9 @@ void Languages::add(const Value& definition)
     {
         if(!suggestions.is_array())
         {
-            throw ScriptError{where + ": suggestions is a list of words, or of {label, detail, text}"};
+            throw ScriptError{oui::format_text(
+                oui::translate("Scripts", "{0}: suggestions is a list of words, or of {label, detail, text}"),
+                {where})};
         }
         for(std::size_t index{}; index < suggestions.length(); ++ index)
         {
@@ -96,7 +112,8 @@ void Languages::add(const Value& definition)
             }
             if(!item.is_object() || !item.get("label").is_string())
             {
-                throw ScriptError{where + ": a suggestion is a word, or {label, detail, text}"};
+                throw ScriptError{oui::format_text(
+                    oui::translate("Scripts", "{0}: a suggestion is a word, or {label, detail, text}"), {where})};
             }
             Suggestion suggestion{item.get("label").to_string(), {}, {}};
             if(item.get("detail").is_string())

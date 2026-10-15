@@ -1,6 +1,7 @@
 #include "scripting.h"
 
 #include <oui/file_system.h>
+#include <oui/translation.h>
 
 #include <algorithm>
 #include <array>
@@ -35,7 +36,9 @@ CommandPlacement read_placement(const Value& definition, std::string_view langua
         placement.keys = oui::parse_shortcut(keys.to_string());
         if(!placement.keys)
         {
-            throw ScriptError{what + ": \"" + keys.to_string() + "\" is not a shortcut, such as \"Ctrl+Alt+U\""};
+            throw ScriptError{
+                oui::format_text(oui::translate("Scripts", "{0}: \"{1}\" is not a shortcut, such as \"Ctrl+Alt+U\""),
+                                 {what, keys.to_string()})};
         }
     }
     if(const auto path{definition.get("menuPath")}; !path.is_undefined())
@@ -55,7 +58,9 @@ CommandPlacement read_placement(const Value& definition, std::string_view langua
         const auto empty{std::find(placement.menu_path.begin(), placement.menu_path.end(), std::string{})};
         if(empty != placement.menu_path.end())
         {
-            throw ScriptError{what + ": menuPath \"" + written + "\" has a name missing, such as \"edit/Case\""};
+            throw ScriptError{oui::format_text(
+                oui::translate("Scripts", "{0}: menuPath \"{1}\" has a name missing, such as \"edit/Case\""),
+                {what, written})};
         }
         auto& menu{placement.menu_path.front()};
         std::transform(menu.begin(), menu.end(), menu.begin(),
@@ -63,8 +68,11 @@ CommandPlacement read_placement(const Value& definition, std::string_view langua
         static constexpr std::array<std::string_view, 5> menus{"file", "edit", "view", "tools", "help"};
         if(std::find(menus.begin(), menus.end(), menu) == menus.end())
         {
-            throw ScriptError{what + ": menuPath \"" + written +
-                              "\" starts with no menu of OUI Code's: file, edit, view, tools or help"};
+            throw ScriptError{oui::format_text(
+                oui::translate(
+                    "Scripts",
+                    "{0}: menuPath \"{1}\" starts with no menu of OUI Code's: file, edit, view, tools or help"),
+                {what, written})};
         }
     }
     return placement;
@@ -73,7 +81,7 @@ CommandPlacement read_placement(const Value& definition, std::string_view langua
 // What the scripts that give OUI Code its languages and text commands see, for tools/extract_api.js to put in
 // oui.d.ts:
 //
-// api(oui_code): oui.languages.register(language: {id: string, name?: string, extensions?: string[], files?: string[], comment?: string, brackets?: string[], states: {[state: string]: object[]}, suggestions?: (string | {label: string, detail?: string, text?: string})[]}): void
+// api(oui_code): oui.languages.register(language: {id: string, name?: string | {[language: string]: string}, extensions?: string[], files?: string[], comment?: string, brackets?: string[], states: {[state: string]: object[]}, suggestions?: (string | {label: string, detail?: string, text?: string})[]}): void
 // Adds a language, or replaces one with the same id: how files of its extensions and names are coloured, from the
 // rules of each state, how a line is commented, which brackets pair, and what it suggests as one writes: words,
 // as its keywords, or pieces of text with a name, where "$0" marks where the cursor goes.
@@ -90,7 +98,7 @@ Scripting::Scripting(std::string language) : m_language{std::move(language)}
     m_engine.define("oui.languages.register",
                     [this](const std::vector<Value>& arguments)
                     {
-                        m_languages.add(arguments.empty() ? Value{} : arguments.front());
+                        m_languages.add(arguments.empty() ? Value{} : arguments.front(), m_language);
                         return Value{};
                     });
     m_engine.define("oui.commands.register",
@@ -106,22 +114,25 @@ void Scripting::add_command(const Value& definition)
 {
     if(!definition.is_object())
     {
-        throw ScriptError{"a command is an object such as {id: \"user.shout\", title: \"Shout\", run: text => ...}"};
+        throw ScriptError{oui::translate(
+            "Scripts", "a command is an object such as {id: \"user.shout\", title: \"Shout\", run: text => ...}")};
     }
     TextCommand command;
     command.id = definition.get("id").to_string();
     if(definition.get("id").is_undefined() || command.id.empty())
     {
-        throw ScriptError{"a command needs an id"};
+        throw ScriptError{oui::translate("Scripts", "a command needs an id")};
     }
-    auto placement{read_placement(definition, m_language, command.id, "command " + command.id)};
+    auto placement{read_placement(definition, m_language, command.id,
+                                  oui::format_text(oui::translate("Scripts", "command {0}"), {command.id}))};
     command.title = std::move(placement.title);
     command.keys = placement.keys;
     command.menu_path = std::move(placement.menu_path);
     command.run = definition.get("run");
     if(!command.run.is_function())
     {
-        throw ScriptError{"command " + command.id + " needs run, a function"};
+        throw ScriptError{
+            oui::format_text(oui::translate("Scripts", "command {0} needs run, a function"), {command.id})};
     }
     const auto same{std::find_if(m_commands.begin(), m_commands.end(),
                                  [&command](const TextCommand& other) { return other.id == command.id; })};

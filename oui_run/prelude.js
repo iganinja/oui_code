@@ -862,7 +862,7 @@ class Ui {
         Object.defineProperty(this, "root", {value: existing(rootKind, rootId)});
         for (const [id, widgetId, kind] of named) {
             if (id === "root" || id === "put") {
-                throw new Error(`an id cannot be ${id}, which a Ui has already`);
+                throw new Error(n.describedProblem("id", id));
             }
             this[id] = existing(kind, widgetId);
         }
@@ -875,16 +875,14 @@ class Ui {
     // The described Window, as a dialog's; static, so no id is taken by it.
     static dialogOf(ui) {
         if (ui.#rootKind !== "Window") {
-            throw new Error(`oui.Dialog: the description starts with a ${ui.#rootKind}, not a Window: ` +
-                "give oui.Dialog a title and ui.root");
+            throw new Error(n.describedProblem("dialog", ui.#rootKind));
         }
         return ui.root.id;
     }
     // Opens the window as the description's Window says; static, so no id is taken by it.
     static open(ui) {
         if (ui.#rootKind !== "Window") {
-            throw new Error(`oui.window: the description starts with a ${ui.#rootKind}, not a Window: ` +
-                "give oui.window a title and ui.root");
+            throw new Error(n.describedProblem("window", ui.#rootKind));
         }
         n.windowDescribed(ui.root.id);
     }

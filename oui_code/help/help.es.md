@@ -120,8 +120,8 @@ documentos abiertos, lo que ofrece el lenguaje del documento, como sus palabras 
 bucle o una función, y en un script (`.js`) lo que pueden usar los scripts de OUI, tras `oui.` con cómo se llama
 cada cosa, y tras un nombre hecho con `new oui.Label(...)` u otra de sus clases, lo que tiene. Arriba y Abajo eligen, Intro o Tab la ponen en lugar de la palabra, Esc cierra la lista y seguir
 escribiendo la estrecha. **Ctrl+Espacio**, o **Alt+/** en una terminal que se quede Ctrl+Espacio, pide sugerencias
-en cualquier momento, y avisa cuando no hay nada que sugerir. En Preferencias se desactiva la lista que se abre
-sola.
+en cualquier momento, y avisa cuando no hay nada que sugerir. **Ver › Sugerir palabras al escribir** quita y pone
+la lista que se abre sola, para escribir prosa, donde casi cada palabra tiene una.
 
 En un script, dentro de los paréntesis de una llamada a algo que pueden usar los scripts de OUI, como
 `oui.writeFile(`, una nota sobre la línea muestra cómo se llama, con el parámetro que estás escribiendo marcado, y
@@ -233,7 +233,8 @@ como una cadena o un comentario, y salir con `pop`; un estado puede durar muchas
 bloque. Los tipos son keyword, type, function, string, number, constant, comment, preprocessor, operator, tag,
 attribute, heading, emphasis, link e invalid. `oui.words("if", "else")` da el patrón de una lista de palabras
 completas. `suggestions` dice qué sugiere el editor mientras se escribe en el lenguaje: palabras, o `{label,
-detail, text}` para un trozo de texto, con `$0` donde va el cursor después. Una definición con el id de otra la
+detail, text}` para un trozo de texto, con `$0` donde va el cursor después. `name`, como el título de una orden,
+puede ser uno por idioma: `{en: "Configuration", es: "Configuración"}`. Una definición con el id de otra la
 sustituye, así que las tuyas pueden cambiar las de OUI Code. Todo lo que pueden usar los scripts está en
 `oui.d.ts`, junto a las fuentes de OUI Code.
 
@@ -299,14 +300,14 @@ del proyecto, la selección, y la línea y la columna del cursor:
 ```js
 // oui_code_scripts/tools/count_words.js
 export const tool = {
-    title: "Count Words",      // o {en: "Count Words", es: "Contar palabras"}
+    title: "Contar palabras",  // o {en: "Count Words", es: "Contar palabras"}
     keys: "Ctrl+Alt+W",        // opcional
     menuPath: "edit",          // opcional: sin él, en Herramientas > Herramientas de usuario
 };
 
 export async function run({file, language, folder, selection, line, column}) {
     const words = selection.split(/\s+/).filter(Boolean).length;
-    await oui.message("Count Words", `${words} words selected`);
+    await oui.message("Contar palabras", `${words} palabras seleccionadas`);
 }
 ```
 
@@ -353,13 +354,13 @@ Una descripción es un widget por línea: su tipo, su texto entre comillas y lue
 nombre solo. Lo que va dentro de un widget se sangra debajo de él, y `#` empieza un comentario.
 
 ```
-Window "Rename Files" width=50
-  Label "&Pattern:" buddy=pattern
-  LineEdit id=pattern placeholder="A regular expression"
-  CheckButton "&Show what changes first" checked
+Window "Renombrar archivos" width=50
+  Label "&Patrón:" buddy=pattern
+  LineEdit id=pattern placeholder="Una expresión regular"
+  CheckButton "&Mostrar antes lo que cambia" checked
   Row centered gap=tight
-    Button "&Rename" default
-    Button "Cancel"
+    Button "&Renombrar" default
+    Button "Cancelar"
 ```
 
 - `Window`, `Column`, `Row`, `Grid`, `Split` y `Tabs` con `Tab` contienen otros; `Label`, `LineEdit`, `TextEdit`,

@@ -34,9 +34,10 @@ struct Language
 class Languages
 {
   public:
-    // Adds the language a script's definition describes, replacing one with the same id. Throws
-    // olagarro::oui::script::ScriptError saying what is wrong with a definition that does not hold.
-    void add(const olagarro::oui::script::Value& definition);
+    // Adds the language a script's definition describes, replacing one with the same id, named in `language`, the
+    // interface's, when its name is one per language. Throws olagarro::oui::script::ScriptError saying what is wrong
+    // with a definition that does not hold.
+    void add(const olagarro::oui::script::Value& definition, std::string_view language);
     // The language of `file`, by its name and then its extension; none for a file of no known language.
     [[nodiscard]] std::shared_ptr<const Language> for_path(const std::filesystem::path& file) const;
     [[nodiscard]] std::shared_ptr<const Language> with_id(std::string_view id) const;

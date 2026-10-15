@@ -126,6 +126,18 @@ TEST(OuiCodeScriptingTests, ColoursPythonAndMarkdownAcrossLines)
                      {"```", SyntaxKind::string}}));
 }
 
+TEST(OuiCodeScriptingTests, NamesLanguagesInTheInterfaceLanguage)
+{
+    Scripting spanish{"es"};
+    static_cast<void>(spanish.load(BuiltInScripts{}.scripts(), std::nullopt));
+    EXPECT_EQ(spanish.languages().with_id("config")->name, "Configuración");
+    EXPECT_EQ(spanish.languages().with_id("oui")->name, "Descripción OUI");
+    // A language without a name of its own takes the English one.
+    Scripting german{"de"};
+    static_cast<void>(german.load(BuiltInScripts{}.scripts(), std::nullopt));
+    EXPECT_EQ(german.languages().with_id("config")->name, "Configuration");
+}
+
 TEST(OuiCodeScriptingTests, RunsTextCommandsInTheInterfaceLanguage)
 {
     Scripting scripting{"es"};

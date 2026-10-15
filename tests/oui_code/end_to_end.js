@@ -176,6 +176,36 @@ test("Opening Interactive UI from the menu suggests nothing: the letter picked t
     expect("no suggestions", shown.find("widget"), null);
 });
 
+// Ctrl+End, then the start of a word the document has: the list offers it under what is typed.
+const story = {"story.txt": "dragon\n"};
+const writeDr = ["\x1b[1;5F", "d", "r"];
+const dragons = (shown) => shown.all().split("dragon").length - 1;
+
+test("Writing suggests the words of the open documents", async () => {
+    const shown = await session(ouiCode, ["story.txt"], story, writeDr);
+    expect("the word in the document and in the list", dragons(shown), 2);
+});
+
+test("View > Toggle Suggestions As You Type stops the list opening by itself, and is remembered", async () => {
+    // Alt+V opens the View menu, and S is the letter of the entry there. Turned off with nothing written, so the
+    // next start has no unsaved work to offer back.
+    const here = await place(ouiCode, story);
+    const off = await here.run(["story.txt"], ["\x1bv", "s", ...writeDr]);
+    await here.remove();
+    const again = await place(ouiCode, story);
+    await again.run(["story.txt"], ["\x1bv", "s"]);
+    const after = await again.run(["story.txt"], writeDr);
+    await again.remove();
+    expect("only the word in the document", dragons(off), 1);
+    expect("still off the next time", dragons(after), 1);
+});
+
+test("With suggestions as you type off, Alt+/ asks for them all the same", async () => {
+    const off = {...story, "oui_code.ini": "suggest_as_you_type=false\n"};
+    const shown = await session(ouiCode, ["story.txt"], off, [...writeDr, "\x1b/"]);
+    expect("the word in the document and in the list", dragons(shown), 2);
+});
+
 test("Interactive UI builds again what is typed, a moment after", async () => {
     // Ctrl+End, then a button at the end of the window.
     const shown = await session(ouiCode, ["form.oui"], descriptions,

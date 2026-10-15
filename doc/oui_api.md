@@ -938,7 +938,7 @@ Adds a text command, in the palette and Alt+X, on keys when given: run gets the 
 ### oui.languages.register
 
 ```ts
-oui.languages.register(language: {id: string, name?: string, extensions?: string[], files?: string[], comment?: string, brackets?: string[], states: {[state: string]: object[]}, suggestions?: (string | {label: string, detail?: string, text?: string})[]}): void
+oui.languages.register(language: {id: string, name?: string | {[language: string]: string}, extensions?: string[], files?: string[], comment?: string, brackets?: string[], states: {[state: string]: object[]}, suggestions?: (string | {label: string, detail?: string, text?: string})[]}): void
 ```
 
 Adds a language, or replaces one with the same id: how files of its extensions and names are coloured, from the rules of each state, how a line is commented, which brackets pair, and what it suggests as one writes: words, as its keywords, or pieces of text with a name, where "$0" marks where the cursor goes.

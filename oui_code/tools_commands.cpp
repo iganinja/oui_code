@@ -147,7 +147,8 @@ std::vector<std::string> Workbench::load_tools()
         try
         {
             m_tools.push_back({"user_tool." + stem,
-                               read_placement(reader.tool(), m_options.interface_language, stem, "tool " + name),
+                               read_placement(reader.tool(), m_options.interface_language, stem,
+                                              oui::format_text(oui::translate("Scripts", "tool {0}"), {name})),
                                file});
         }
         catch(const oui::script::ScriptError& failure)

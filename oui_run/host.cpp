@@ -73,8 +73,9 @@ oui::Length length_of(const oui::script::Value& value)
     {
         return oui::Length::percent(static_cast<float>(std::atof(text.c_str())));
     }
-    throw oui::script::ScriptError{"a length is a number of cells, \"content\", \"fill\", \"flex\" or \"40%\", not " +
-                                   text};
+    throw oui::script::ScriptError{oui::format_text(
+        oui::translate("Runner", "a length is a number of cells, \"content\", \"fill\", \"flex\" or \"40%\", not {0}"),
+        {text})};
 }
 
 // A key as a script reads it, in English whatever the language: "Ctrl+S", "Enter", "Shift+F3", "A".
@@ -290,7 +291,8 @@ using Arguments = std::vector<Value>;
     {
         return *field;
     }
-    throw ScriptError{"there is no colour " + name + " in the theme, nor is it one as \"#20a0ff\""};
+    throw ScriptError{oui::format_text(
+        oui::translate("Runner", "there is no colour {0} in the theme, nor is it one as \"#20a0ff\""), {name})};
 }
 
 // A key of the script's settings, as the file it is kept in can hold it: a line before an =.
@@ -300,8 +302,11 @@ using Arguments = std::vector<Value>;
     if(key.empty() || key.find_first_of("=\r\n") != std::string::npos || key.front() == '#' || key.front() == ' ' ||
        key.back() == ' ' || key.front() == '\t' || key.back() == '\t')
     {
-        throw ScriptError{
-            "\"" + key + "\" cannot be a setting's name: one with no =, no line break, and no blank or # at its start"};
+        throw ScriptError{oui::format_text(
+            oui::translate(
+                "Runner",
+                "\"{0}\" cannot be a setting's name: one with no =, no line break, and no blank or # at its start"),
+            {key})};
     }
     return key;
 }
@@ -514,7 +519,7 @@ template <typename Kind> Kind& Host::widget(int id, std::string_view what)
     auto* const result{found == m_widgets.end() ? nullptr : dynamic_cast<Kind*>(found->second)};
     if(result == nullptr)
     {
-        throw ScriptError{"not a " + std::string{what}};
+        throw ScriptError{oui::format_text(oui::translate("Runner", "not a {0}"), {what})};
     }
     return *result;
 }
@@ -524,7 +529,8 @@ std::unique_ptr<oui::Widget> Host::take(int id)
     const auto found{m_loose.find(id)};
     if(found == m_loose.end())
     {
-        throw ScriptError{m_widgets.count(id) != 0 ? "that widget is in place already" : "not a widget"};
+        throw ScriptError{m_widgets.count(id) != 0 ? oui::translate("Runner", "that widget is in place already")
+                                                   : oui::translate("Runner", "not a widget")};
     }
     auto taken{std::move(found->second)};
     m_loose.erase(found);
@@ -548,7 +554,7 @@ void Host::on(int id, const std::string& event, const Value& function)
 {
     if(!function.is_function())
     {
-        throw ScriptError{"on " + event + ": not a function"};
+        throw ScriptError{oui::format_text(oui::translate("Runner", "on {0}: not a function"), {event})};
     }
     const auto key{std::make_pair(id, event)};
     const auto first{m_handlers.count(key) == 0};
@@ -711,7 +717,7 @@ void Host::on(int id, const std::string& event, const Value& function)
     }
     else
     {
-        throw ScriptError{"no event " + event};
+        throw ScriptError{oui::format_text(oui::translate("Runner", "no event {0}"), {event})};
     }
 }
 
@@ -719,7 +725,7 @@ void Host::open_window(const std::string& title)
 {
     if(m_window != nullptr)
     {
-        throw ScriptError{"oui.window: the window is open already"};
+        throw ScriptError{oui::translate("Runner", "oui.window: the window is open already")};
     }
 #ifdef OUI_RUN_WINDOW
     if(m_desktop_window)
@@ -771,7 +777,7 @@ void Host::set_window_content(int id)
 {
     if(m_window == nullptr)
     {
-        throw ScriptError{"oui.window: open the window first"};
+        throw ScriptError{oui::translate("Runner", "oui.window: open the window first")};
     }
     auto& content{m_middle->add(take(id))};
     fit_window();
@@ -828,7 +834,8 @@ std::vector<oui::MenuItem> Host::menu_items(const Value& entries)
         const auto shortcut{keys.is_string() ? oui::parse_shortcut(keys.to_string()) : std::nullopt};
         if(!run.is_function() || (keys.is_string() && !shortcut))
         {
-            throw ScriptError{"a menu's entry is {title, keys?, run}, keys as \"Ctrl+S\", or \"-\" for a line"};
+            throw ScriptError{oui::translate(
+                "Runner", "a menu's entry is {title, keys?, run}, keys as \"Ctrl+S\", or \"-\" for a line")};
         }
         const auto id{"oui_run.menu." + std::to_string(++ m_next_id)};
         m_application.commands().register_command(id, text_of(item.get("title")), [this, run] { call(run); });
@@ -910,7 +917,7 @@ void Host::open_described_window(int id)
     auto* const window{dynamic_cast<oui::Window*>(taken.get())};
     if(window == nullptr)
     {
-        throw ScriptError{"oui.window: not a described Window"};
+        throw ScriptError{oui::translate("Runner", "oui.window: not a described Window")};
     }
     m_widgets.erase(id);
     m_described_size = window->preferred_size();
@@ -987,8 +994,7 @@ void Host::define_everything()
            });
     define("lineEdit", [this](const Arguments&) { return m_engine.number(adopt(oui::line_edit())); });
     define("progressBar", [this](const Arguments&) { return m_engine.number(adopt(oui::progress_bar())); });
-    define("getValue",
-           [this](const Arguments& a)
+    define("getValue", [this](const Arguments& a)
            { return m_engine.number(widget<oui::ProgressBar>(id_of(a, 0), "progress bar").value()); });
     define("setValue",
            [this](const Arguments& a)
@@ -1156,14 +1162,16 @@ void Host::define_everything()
            {
                auto& dock{widget<oui::DockLayout>(id_of(a, 0), "dock")};
                const auto side{text_of(argument(a, 2))};
-               const auto where{side == "top"      ? oui::Dock::top
-                                : side == "bottom" ? oui::Dock::bottom
-                                : side == "left"   ? oui::Dock::left
-                                : side == "right"  ? oui::Dock::right
-                                : side == "fill"   ? oui::Dock::fill
-                                                   : throw ScriptError{"a dock's side is top, bottom, left, right or "
-                                                                       "fill, not " +
-                                                                     side}};
+               const auto where{
+                   side == "top"      ? oui::Dock::top
+                   : side == "bottom" ? oui::Dock::bottom
+                   : side == "left"   ? oui::Dock::left
+                   : side == "right"  ? oui::Dock::right
+                   : side == "fill"
+                       ? oui::Dock::fill
+                       : throw ScriptError{oui::format_text(
+                             oui::translate("Runner", "a dock's side is top, bottom, left, right or fill, not {0}"),
+                             {side})}};
                auto& added{dock.add(where, take(id_of(a, 1)), static_cast<int>(argument(a, 3).to_number()))};
                if(const auto minimum{static_cast<int>(argument(a, 4).to_number())}; minimum > 0)
                {
@@ -1278,7 +1286,8 @@ void Host::define_everything()
                }
                if(dynamic_cast<oui::TabView*>(parent) != nullptr || dynamic_cast<oui::SplitView*>(parent) != nullptr)
                {
-                   throw ScriptError{"a page of tabs, or a side of a split, stays where it is"};
+                   throw ScriptError{
+                       oui::translate("Runner", "a page of tabs, or a side of a split, stays where it is")};
                }
                // A column's or a row's child takes its length with it.
                for(auto& [box_id, box] : m_boxes)
@@ -1328,7 +1337,7 @@ void Host::define_everything()
             const auto function{argument(a, 1)};
             if(!function.is_function())
             {
-                throw ScriptError{"onKey: not a function"};
+                throw ScriptError{oui::translate("Runner", "onKey: not a function")};
             }
             widget<oui::Widget>(id_of(a, 0), "widget")
                 .set_key_handler(
@@ -1388,7 +1397,8 @@ void Host::define_everything()
                }
                else
                {
-                   throw ScriptError{"that widget does not take a " + which};
+                   throw ScriptError{
+                       oui::format_text(oui::translate("Runner", "that widget does not take a {0}"), {which})};
                }
                return Value{};
            });
@@ -1414,9 +1424,14 @@ void Host::define_everything()
                    std::string listed;
                    for(std::size_t index{}; index < languages.size(); ++ index)
                    {
-                       listed += (index == 0 ? "" : index + 1 == languages.size() ? " or " : ", ") + languages[index];
+                       listed =
+                           index == 0 ? languages[index]
+                           : index + 1 == languages.size()
+                               ? oui::format_text(oui::translate("Runner", "{0} or {1}"), {listed, languages[index]})
+                               : listed + ", " + languages[index];
                    }
-                   throw ScriptError{"there are no texts in " + language + ": " + listed};
+                   throw ScriptError{oui::format_text(oui::translate("Runner", "there are no texts in {0}: {1}"),
+                                                      {language, listed})};
                }
                oui::install_language(language, translations);
                return Value{};
@@ -1472,9 +1487,13 @@ void Host::define_everything()
                std::string listed;
                for(std::size_t index{}; index < names.size(); ++ index)
                {
-                   listed += (index == 0 ? "" : index + 1 == names.size() ? " or " : ", ") + names[index];
+                   listed = index == 0 ? names[index]
+                            : index + 1 == names.size()
+                                ? oui::format_text(oui::translate("Runner", "{0} or {1}"), {listed, names[index]})
+                                : listed + ", " + names[index];
                }
-               throw ScriptError{"there is no theme " + name + ": " + listed};
+               throw ScriptError{
+                   oui::format_text(oui::translate("Runner", "there is no theme {0}: {1}"), {name, listed})};
            });
     define("status",
            [this](const Arguments& a)
@@ -1579,7 +1598,8 @@ void Host::define_everything()
                const auto text{oui::read_file(given.is_absolute() ? given : m_script_folder / given)};
                if(!text)
                {
-                   throw ScriptError{"oui.uiFromFile: cannot read " + name};
+                   throw ScriptError{
+                       oui::format_text(oui::translate("Runner", "oui.uiFromFile: cannot read {0}"), {name})};
                }
                return describe(*text, name + ":");
            });
@@ -1592,7 +1612,7 @@ void Host::define_everything()
                {
                    if(!described.ui.is_slot(name))
                    {
-                       throw ScriptError{"put: " + name + " is not a Slot"};
+                       throw ScriptError{oui::format_text(oui::translate("Runner", "put: {0} is not a Slot"), {name})};
                    }
                }
                catch(const std::logic_error& error)
@@ -1610,6 +1630,29 @@ void Host::define_everything()
            {
                open_described_window(id_of(a, 0));
                return Value{};
+           });
+    // What is wrong with a description given to a Ui, in the interface's language: the prelude says it.
+    define("describedProblem",
+           [this](const Arguments& a)
+           {
+               const auto which{text_of(argument(a, 0))};
+               const auto what{text_of(argument(a, 1))};
+               if(which == "id")
+               {
+                   return m_engine.string(oui::format_text(
+                       oui::translate("Runner", "an id cannot be {0}, which a Ui has already"), {what}));
+               }
+               if(which == "dialog")
+               {
+                   return m_engine.string(oui::format_text(
+                       oui::translate("Runner", "oui.Dialog: the description starts with a {0}, not a Window: give "
+                                                "oui.Dialog a title and ui.root"),
+                       {what}));
+               }
+               return m_engine.string(oui::format_text(
+                   oui::translate("Runner", "oui.window: the description starts with a {0}, not a Window: give "
+                                            "oui.window a title and ui.root"),
+                   {what}));
            });
     define("box",
            [this](const Arguments& a)
@@ -2071,7 +2114,9 @@ void Host::define_everything()
                {
                    return m_engine.boolean(edit.toggle_line_comment(text_of(argument(a, 2))));
                }
-               throw ScriptError{"lines are duplicated, moved up or down, deleted or commented, not " + what};
+               throw ScriptError{oui::format_text(
+                   oui::translate("Runner", "lines are duplicated, moved up or down, deleted or commented, not {0}"),
+                   {what})};
            });
     define("setEditOption",
            [this](const Arguments& a)
@@ -2101,7 +2146,8 @@ void Host::define_everything()
                }
                else
                {
-                   throw ScriptError{"a text edit has no option " + name};
+                   throw ScriptError{
+                       oui::format_text(oui::translate("Runner", "a text edit has no option {0}"), {name})};
                }
                return Value{};
            });
@@ -2124,7 +2170,8 @@ void Host::define_everything()
                const auto index{static_cast<std::size_t>(argument(a, 1).to_number())};
                if(index >= tabs.child_count())
                {
-                   throw ScriptError{"there is no tab " + std::to_string(index)};
+                   throw ScriptError{
+                       oui::format_text(oui::translate("Runner", "there is no tab {0}"), {std::to_string(index)})};
                }
                return m_engine.string(std::string{tabs.title(index)});
            });
@@ -2135,7 +2182,8 @@ void Host::define_everything()
                const auto index{static_cast<std::size_t>(argument(a, 1).to_number())};
                if(index >= tabs.child_count())
                {
-                   throw ScriptError{"there is no tab " + std::to_string(index)};
+                   throw ScriptError{
+                       oui::format_text(oui::translate("Runner", "there is no tab {0}"), {std::to_string(index)})};
                }
                tabs.set_title(index, text_of(argument(a, 2)));
                return Value{};
@@ -2147,7 +2195,8 @@ void Host::define_everything()
                const auto index{static_cast<std::size_t>(argument(a, 1).to_number())};
                if(index >= tabs.child_count())
                {
-                   throw ScriptError{"there is no tab " + std::to_string(index)};
+                   throw ScriptError{
+                       oui::format_text(oui::translate("Runner", "there is no tab {0}"), {std::to_string(index)})};
                }
                auto* const page{&tabs.child_at(index)};
                if(m_application.focused() != nullptr && page->contains(m_application.focused()))
@@ -2171,7 +2220,7 @@ void Host::define_everything()
                const auto to{static_cast<std::size_t>(argument(a, 2).to_number())};
                if(from >= tabs.child_count() || to >= tabs.child_count())
                {
-                   throw ScriptError{"there is no tab there"};
+                   throw ScriptError{oui::translate("Runner", "there is no tab there")};
                }
                tabs.move_tab(from, to);
                return Value{};
@@ -2221,7 +2270,7 @@ void Host::define_everything()
                }
                else
                {
-                   throw ScriptError{"a table has no option " + name};
+                   throw ScriptError{oui::format_text(oui::translate("Runner", "a table has no option {0}"), {name})};
                }
                return Value{};
            });
@@ -2313,7 +2362,9 @@ void Host::define_everything()
                value.is_null() ? kept.remove(key) : kept.set_value(key, value.to_string());
                if(!kept.save())
                {
-                   throw ScriptError{"the settings could not be saved in " + oui::utf8_of(kept.file_path())};
+                   throw ScriptError{
+                       oui::format_text(oui::translate("Runner", "the settings could not be saved in {0}"),
+                                        {oui::utf8_of(kept.file_path())})};
                }
                return Value{};
            });
@@ -2342,11 +2393,11 @@ void Host::define_everything()
                static_cast<void>(widget<oui::Window>(id, "dialog"));
                if(m_window == nullptr)
                {
-                   throw ScriptError{"a dialog opens over the window: oui.window first"};
+                   throw ScriptError{oui::translate("Runner", "a dialog opens over the window: oui.window first")};
                }
                if(m_dialogs.count(id) != 0)
                {
-                   throw ScriptError{"the dialog is open already"};
+                   throw ScriptError{oui::translate("Runner", "the dialog is open already")};
                }
                auto pending{m_engine.promise()};
                // Shown once this call has returned: the dialog waits on the user, and the script must not.
@@ -2393,7 +2444,8 @@ void Host::define_everything()
                const auto function{argument(a, 1)};
                if(!shortcut || !function.is_function())
                {
-                   throw ScriptError{"oui.shortcut takes keys such as \"Ctrl+S\" and a function"};
+                   throw ScriptError{
+                       oui::translate("Runner", "oui.shortcut takes keys such as \"Ctrl+S\" and a function")};
                }
                const auto id{"oui_run.shortcut." + std::to_string(++ m_next_id)};
                m_application.commands().register_command(id, keys, [this, function] { call(function); });

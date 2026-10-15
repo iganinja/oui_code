@@ -436,6 +436,21 @@ void Workbench::register_view_commands()
                                                   }
                                               });
     m_application.commands().set_checked("view.word_wrap", m_settings.bool_value("word_wrap", false));
+    // The list of suggestions opening by itself as one writes, for every document: off for prose, where nearly every
+    // word has one. Ctrl+Space asks for it all the same.
+    m_application.commands().register_command(
+        "view.suggest_as_you_type", oui::translate("Commands", "Toggle &Suggestions As You Type"),
+        [this]
+        {
+            const auto enabled{!m_settings.bool_value("suggest_as_you_type", true)};
+            m_settings.set_bool_value("suggest_as_you_type", enabled);
+            static_cast<void>(m_settings.save());
+            m_suggester.set_as_you_type(enabled);
+            m_application.commands().set_checked("view.suggest_as_you_type", enabled);
+        });
+    m_suggester.set_as_you_type(m_settings.bool_value("suggest_as_you_type", true));
+    m_application.commands().set_checked("view.suggest_as_you_type",
+                                         m_settings.bool_value("suggest_as_you_type", true));
     m_application.commands().register_command("help.shortcuts", oui::translate("Commands", "Keyboard Shortcuts"),
                                               [this] { show_palette(m_application); });
     m_application.commands().register_command(
@@ -603,20 +618,20 @@ void Workbench::register_view_commands()
 
 std::vector<oui::MenuItem> Workbench::view_menu()
 {
-    std::vector<oui::MenuItem> view_items{
-        "view.command_palette",
-        oui::menu_separator(),
-        "view.toggle_menu",
-        "view.toggle_project",
-        "view.toggle_explorer",
-        "view.split_editor",
-        "view.go_to_group",
-        "view.word_wrap",
-        "view.markdown_preview",
-        "view.code_todos",
-        "view.task_list",
-        oui::menu_separator(),
-        oui::menu_submenu(oui::translate("Menu", "S&yntax"), [this] { return syntax_menu(); })};
+    std::vector<oui::MenuItem> view_items{"view.command_palette",
+                                          oui::menu_separator(),
+                                          "view.toggle_menu",
+                                          "view.toggle_project",
+                                          "view.toggle_explorer",
+                                          "view.split_editor",
+                                          "view.go_to_group",
+                                          "view.word_wrap",
+                                          "view.suggest_as_you_type",
+                                          "view.markdown_preview",
+                                          "view.code_todos",
+                                          "view.task_list",
+                                          oui::menu_separator(),
+                                          oui::menu_submenu(oui::translate("Menu", "S&yntax"), [this] { return syntax_menu(); })};
 #ifdef OUI_CODE_WINDOW
     if(m_options.window_screen != nullptr)
     {

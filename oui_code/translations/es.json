@@ -91,6 +91,7 @@
       "Toggle Line Comment": "Comentar o descomentar líneas",
       "Toggle Menu Bar": "Mostrar u ocultar la barra de menús",
       "Toggle Project Tree": "Mostrar u ocultar el árbol del proyecto",
+      "Toggle &Suggestions As You Type": "&Sugerir palabras al escribir",
       "Toggle Word Wrap": "Ajustar líneas",
       "Undo": "Deshacer",
       "Interactive UI: Generate JavaScript": "Interfaz interactiva: generar JavaScript",
@@ -256,6 +257,10 @@
       "A script that gets what Generate writes, to save it or build with it: one for each language": "Un script que recibe lo que escribe Generar, para guardarlo o compilar con ello: uno por lenguaje",
       "New...": "Nuevo..."
     },
+    "LiveScript": {
+      "failed": "falló",
+      "still running after two seconds": "sigue ejecutándose tras dos segundos"
+    },
     "Menu": {
       "&Edit": "&Edición",
       "&File": "&Archivo",
@@ -287,7 +292,6 @@
       "Preferences": "Preferencias",
       "&Reload files changed on disk automatically": "&Recargar solos los archivos que cambian en disco",
       "&Spaces per Tab:": "&Espacios por tabulador:",
-      "Su&ggest words as you type": "Sugerir &palabras al escribir",
       "System language": "Idioma del sistema",
       "The language changes the next time OUI Code starts.": "El idioma cambia la próxima vez que se abra OUI Code.",
       "&Use spaces for Tab": "&Usar espacios al tabular"
@@ -342,7 +346,22 @@
       "User Scripts Output": "Salida de los scripts de usuario",
       "Scripts": "Scripts",
       "Text Commands": "Comandos de texto",
-      "{0} is in the tools folder, but is no tool: a tool exports tool, such as {title: \"Count Words\", keys: \"Ctrl+Alt+W\"}, and run(context).": "{0} está en la carpeta tools, pero no es una herramienta: una herramienta exporta tool, como {title: \"Count Words\", keys: \"Ctrl+Alt+W\"}, y run(context)."
+      "{0} is in the tools folder, but is no tool: a tool exports tool, such as {title: \"Count Words\", keys: \"Ctrl+Alt+W\"}, and run(context).": "{0} está en la carpeta tools, pero no es una herramienta: una herramienta exporta tool, como {title: \"Count Words\", keys: \"Ctrl+Alt+W\"}, y run(context).",
+      "{0}: \"{1}\" is not a shortcut, such as \"Ctrl+Alt+U\"": "{0}: \"{1}\" no es un atajo, como \"Ctrl+Alt+U\"",
+      "{0}: menuPath \"{1}\" has a name missing, such as \"edit/Case\"": "{0}: a menuPath \"{1}\" le falta un nombre, como en \"edit/Case\"",
+      "{0}: menuPath \"{1}\" starts with no menu of OUI Code's: file, edit, view, tools or help": "{0}: menuPath \"{1}\" no empieza por un menú de OUI Code: file, edit, view, tools o help",
+      "a command is an object such as {id: \"user.shout\", title: \"Shout\", run: text => ...}": "un comando es un objeto como {id: \"user.shout\", title: \"Shout\", run: text => ...}",
+      "a command needs an id": "un comando necesita un id",
+      "command {0}": "comando {0}",
+      "command {0} needs run, a function": "el comando {0} necesita run, una función",
+      "{0} must be a list of strings": "{0} tiene que ser una lista de cadenas",
+      "a language is an object such as {id: \"cpp\", extensions: [\".cpp\"], states: {...}}": "un lenguaje es un objeto como {id: \"cpp\", extensions: [\".cpp\"], states: {...}}",
+      "a language needs an id": "un lenguaje necesita un id",
+      "language {0}": "lenguaje {0}",
+      "{0}: a bracket pair is two characters, such as \"()\", not \"{1}\"": "{0}: una pareja de paréntesis son dos caracteres, como \"()\", no \"{1}\"",
+      "{0}: suggestions is a list of words, or of {label, detail, text}": "{0}: suggestions es una lista de palabras, o de {label, detail, text}",
+      "{0}: a suggestion is a word, or {label, detail, text}": "{0}: una sugerencia es una palabra, o {label, detail, text}",
+      "tool {0}": "herramienta {0}"
     },
     "SplitEditor": {
       "Move: ←↑→↓ · Tabs: PgUp/PgDn · Done: any other key": "Moverse: ←↑→↓ · Pestañas: RePág/AvPág · Listo: cualquier otra tecla",

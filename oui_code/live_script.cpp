@@ -5,6 +5,7 @@
 #include <oui/file_system.h>
 #include <oui/script/script_engine.h>
 #include <oui/script/system_api.h>
+#include <oui/translation.h>
 
 #include <chrono>
 #include <cstdio>
@@ -163,7 +164,8 @@ void LiveScript::run(std::string_view code, const std::filesystem::path& path, s
     run->engine.define("__ouiLiveFailed",
                        [finish](const std::vector<Value>& arguments)
                        {
-                           finish(arguments.empty() ? std::string{"failed"} : arguments[0].to_string());
+                           finish(arguments.empty() ? oui::translate("LiveScript", "failed")
+                                                    : arguments[0].to_string());
                            return Value{};
                        });
     std::string input_literal{"undefined"};
@@ -236,7 +238,7 @@ void LiveScript::run(std::string_view code, const std::filesystem::path& path, s
     }
     if(!run->finished)
     {
-        run->patience =
-            m_application.start_timer(patience, [finish] { finish(std::string{"still running after two seconds"}); });
+        run->patience = m_application.start_timer(
+            patience, [finish] { finish(oui::translate("LiveScript", "still running after two seconds")); });
     }
 }

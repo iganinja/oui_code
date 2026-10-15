@@ -9,7 +9,6 @@ Window "Preferences" context=Preferences
   VSpacer
   Label "Editor" heading
   CheckButton "&Use spaces for Tab" id=use_spaces
-  CheckButton "Su&ggest words as you type" id=suggest
   Grid columns=content,fill gap=tight
     Label "&Spaces per Tab:" buddy=spaces
     LineEdit id=spaces

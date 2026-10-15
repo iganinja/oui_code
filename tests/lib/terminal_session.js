@@ -4,10 +4,11 @@
 
 export const quote = (text) => `'${text.replaceAll("'", "'\\''")}'`;
 
-// Runs a shell command and gives what it printed, its errors too, and its exit code.
+// Runs a shell command and gives what it printed, its errors too, and its exit code. In English, whatever the
+// language of the machine: what the programs say is translated, and the tests expect it as the sources write it.
 export async function capture(command, options = {}) {
     let output = "";
-    const code = await oui.run(command, {...options, output: (text) => { output += text; }});
+    const code = await oui.run(`export LANGUAGE=en; ${command}`, {...options, output: (text) => { output += text; }});
     return {code, output};
 }
 

@@ -2,7 +2,7 @@
 // a name alone.
 oui.languages.register({
     id: "oui",
-    name: "OUI Description",
+    name: {en: "OUI Description", es: "Descripción OUI"},
     extensions: [".oui"],
     comment: "#",
     states: {

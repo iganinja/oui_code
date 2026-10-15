@@ -15,7 +15,7 @@
 using namespace olagarro;
 
 void show_preferences(oui::Application& application, oui::Settings& settings, Editors& editors,
-                      UnsavedBackup& unsaved_backup, oui::Suggester& suggester)
+                      UnsavedBackup& unsaved_backup)
 {
     auto ui{build_oui_code_ui(OuiCodeUi::preferences)};
     // "auto" follows the system; the rest are English, which the sources are written in, and the languages OUI Code
@@ -54,7 +54,6 @@ void show_preferences(oui::Application& application, oui::Settings& settings, Ed
                             });
                     }};
     keep("use_spaces", "tab_use_spaces", false, [](bool) {});
-    keep("suggest", "suggest_as_you_type", true, [&suggester](bool checked) { suggester.set_as_you_type(checked); });
     keep("reload", "reload_external_changes", true, [](bool) {});
     keep("hot_exit", "hot_exit", false, [](bool) {});
     keep("backup", "backup_unsaved", true, [&unsaved_backup](bool) { unsaved_backup.configure(); });

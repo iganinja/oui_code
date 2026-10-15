@@ -116,8 +116,9 @@ what the document's language offers, as its keywords and pieces of text for a lo
 (`.js`) what OUI's scripts can use, after `oui.` with how each is called, and after a name made with
 `new oui.Label(...)` or another of its classes, what that has. Up and Down pick, Enter or Tab put it in
 place of the word, Escape closes the list, and writing on narrows it. **Ctrl+Space**, or **Alt+/** in a terminal
-that keeps Ctrl+Space, asks for suggestions at any time, and says so when there is nothing to suggest. Preferences
-turn off the list that opens by itself.
+that keeps Ctrl+Space, asks for suggestions at any time, and says so when there is nothing to suggest.
+**View > Toggle Suggestions As You Type** turns the list that opens by itself off and on, for writing prose, where
+nearly every word has one.
 
 In a script, inside the brackets of a call to what OUI's scripts can use, as `oui.writeFile(`, a note over the
 line shows how it is called, with the parameter you are writing marked, and what it does. It follows the cursor
@@ -224,7 +225,8 @@ and `pop` back out of it; a state can last over many lines, as a block comment d
 type, function, string, number, constant, comment, preprocessor, operator, tag, attribute, heading, emphasis,
 link and invalid. `oui.words("if", "else")` makes the pattern for a list of whole words. `suggestions` lists what
 the editor suggests while one writes in the language: words, or `{label, detail, text}` for a piece of text, with
-`$0` where the cursor goes after. A definition with the id of another replaces it, so yours can change OUI Code's
+`$0` where the cursor goes after. `name`, like a command's title, can be one per language:
+`{en: "Configuration", es: "Configuración"}`. A definition with the id of another replaces it, so yours can change OUI Code's
 own. Everything scripts can use is in `oui.d.ts`, beside OUI Code's source.
 
 ### Running a script

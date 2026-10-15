@@ -1219,6 +1219,6 @@ declare namespace oui {
          * as its keywords, or pieces of text with a name, where "$0" marks where the cursor goes.
          * In: OUI Code's language and command scripts.
          */
-        function register(language: {id: string, name?: string, extensions?: string[], files?: string[], comment?: string, brackets?: string[], states: {[state: string]: object[]}, suggestions?: (string | {label: string, detail?: string, text?: string})[]}): void;
+        function register(language: {id: string, name?: string | {[language: string]: string}, extensions?: string[], files?: string[], comment?: string, brackets?: string[], states: {[state: string]: object[]}, suggestions?: (string | {label: string, detail?: string, text?: string})[]}): void;
     }
 }

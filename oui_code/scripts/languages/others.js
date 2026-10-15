@@ -13,7 +13,7 @@
         {id: "perl", name: "Perl", extensions: [".pl", ".pm"], comment: "#"},
         {id: "yaml", name: "YAML", extensions: [".yaml", ".yml"], comment: "#"},
         {id: "toml", name: "TOML", extensions: [".toml"], comment: "#"},
-        {id: "config", name: "Configuration", extensions: [".conf", ".cfg", ".ini"],
+        {id: "config", name: {en: "Configuration", es: "Configuración"}, extensions: [".conf", ".cfg", ".ini"],
          files: [".gitignore", ".gitattributes", ".editorconfig"], comment: "#"},
         {id: "make", name: "Makefile", extensions: [".mk"], files: ["Makefile", "GNUmakefile", "makefile"],
          comment: "#"},
