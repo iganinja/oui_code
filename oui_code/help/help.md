@@ -430,9 +430,10 @@ or **Alt+º** on a Spanish keyboard), opens your shell in a tab, in the open fol
 terminal only Alt works: a terminal has no way to send Ctrl with that key.
 While it has the focus it takes the keys a terminal program wants, Ctrl+C and Ctrl+W among them, but for
 **Ctrl+Page Up**, **Ctrl+Page Down** and **Ctrl+Tab**, which still move between tabs, and **Ctrl+Shift** with a
-letter, which stays OUI Code's: **Ctrl+Shift+V** pastes. **Shift+Page Up** and **Shift+Page Down**, and the
-wheel, look back at what scrolled off. Dragging the mouse selects, a double click takes a word and a triple click a
-line; what is selected is copied when the button is let go, and with **Ctrl+Shift+C**. A right click pastes.
+letter, which stays OUI Code's: **Ctrl+Shift+V** pastes, as **Shift+Insert** does. **Shift+Page Up** and
+**Shift+Page Down**, and the wheel, look back at what scrolled off. Dragging the mouse selects, a double click takes
+a word and a triple click a line; what is selected is copied when the button is let go, and with **Ctrl+Shift+C**. A
+right click pastes.
 
 ## Saving and keeping your work
 

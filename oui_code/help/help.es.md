@@ -445,7 +445,7 @@ como lista de tareas. Las listas de tareas vuelven con el resto de la sesión.
 español, **Ctrl+`** o **Alt+`** en uno inglés), abre tu shell en una pestaña, en la carpeta abierta; escribir
 `exit` la cierra. En un terminal solo vale Alt: un terminal no tiene manera de mandar Ctrl con esa tecla. Mientras tiene el foco se queda las teclas que quiere un programa de terminal, Ctrl+C y Ctrl+W
 entre ellas, salvo **Ctrl+RePág**, **Ctrl+AvPág** y **Ctrl+Tab**, que siguen moviéndose entre pestañas, y
-**Ctrl+Mayús** con una letra, que sigue siendo de OUI Code: **Ctrl+Mayús+V** pega. **Mayús+RePág** y
+**Ctrl+Mayús** con una letra, que sigue siendo de OUI Code: **Ctrl+Mayús+V** pega, como **Mayús+Insert**. **Mayús+RePág** y
 **Mayús+AvPág**, y la rueda, miran atrás lo que se fue por arriba. Arrastrar el ratón selecciona, un doble clic
 coge una palabra y un triple clic una línea; lo seleccionado se copia al soltar el botón, y con **Ctrl+Mayús+C**.
 El clic derecho pega.
