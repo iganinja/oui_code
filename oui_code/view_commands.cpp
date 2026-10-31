@@ -20,10 +20,8 @@ using namespace olagarro;
 void Workbench::open_markdown_preview(oui::TextEdit& editor, const std::string& source_title)
 {
     auto& group{m_editors.active()};
+    // In the colours of the document it shows, as the editor has them.
     auto view{oui::markdown_view(std::string{editor.text()})};
-    // Black, as the help, to tell it from the documents.
-    view->set_background(&oui::Theme::reading_background);
-    view->set_foreground(&oui::Theme::reading_foreground);
     auto& view_reference{*view};
     Document preview;
     preview.preview_of = &editor;

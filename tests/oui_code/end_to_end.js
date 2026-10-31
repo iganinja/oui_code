@@ -132,6 +132,14 @@ test("A Markdown preview follows a link to another file, goes back with Alt+Left
     expect("its own tab", titles(edited).includes("parts.md"), true);
 });
 
+test("A Markdown preview has the colours of the document it shows", async () => {
+    const pages = {"notes.md": "Plain words.\n"};
+    const edited = await session(ouiCode, ["notes.md"], pages, [""]);
+    const previewed = await session(ouiCode, ["notes.md"], pages, [keys.f9, ""]);
+    expect("its tab", previewed.row(1).includes("Preview: notes.md"), true);
+    expect("the text", previewed.find("Plain words.", 2)?.colours, edited.find("Plain words.", 2)?.colours);
+});
+
 test("F1 in a comparison opens the help at comparing files", async () => {
     const shown = await session(ouiCode, ["--diff", "left.txt", "right.txt"], files, [keys.f1]);
     expect("its part", shown.find("compares the document you are editing") !== null, true);
