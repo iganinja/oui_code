@@ -160,6 +160,11 @@ int Workbench::run()
         {
             m_unsaved_backup.forget();
         }
+        // The panels are kept as they show round the tab, not as the tab shown alone left them.
+        if(m_distraction_free)
+        {
+            toggle_distraction_free();
+        }
         save_open_session(m_settings, m_editors);
         save_panels(m_settings, m_project_folder, *m_project_tree, *m_file_explorer);
     }
@@ -863,6 +868,10 @@ void Workbench::finish_window(std::unique_ptr<oui::Window> window)
         window->on_closed(
             [this](oui::DialogResult)
             {
+                if(m_distraction_free)
+                {
+                    toggle_distraction_free();
+                }
                 remember_window();
                 save_open_session(m_settings, m_editors);
                 save_panels(m_settings, m_project_folder, *m_project_tree, *m_file_explorer);

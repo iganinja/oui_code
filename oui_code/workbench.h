@@ -155,6 +155,9 @@ class Workbench
     // while Ctrl is held, or while the keys come one soon after another where Ctrl cannot be heard letting go.
     void step_recent_tab(int step);
     void end_recent_tab_steps();
+    // F11: the tab alone on the whole screen, without the menu bar, the status bar, the panels, the other groups and
+    // the row of tabs, in a window covering the display; again, all as it was.
+    void toggle_distraction_free();
 
     // tools_commands.cpp
     // Scripts: OUI Code's own, then the user's from a folder beside the settings. They define languages, which colour
@@ -299,6 +302,18 @@ class Workbench
     // Ends a run of Ctrl+Page Down where the letting go of Ctrl is not told, a moment after the last.
     olagarro::oui::Timer m_recent_tab_steps_end;
     bool m_hears_recent_tab_steps_end{false};
+    // While the tab is shown alone, what showed round it, to show again.
+    struct ShownRound
+    {
+        bool menu_bar{};
+        bool status_bar{};
+        bool project_tree{};
+        bool explorer{};
+        bool find_bar{};
+        olagarro::oui::WidgetRef<olagarro::oui::TabView> tabs;
+        std::vector<olagarro::oui::WidgetRef<olagarro::oui::Widget>> other_groups;
+    };
+    std::optional<ShownRound> m_distraction_free;
 
     std::unique_ptr<Scripting> m_scripting;
     // A tool of the user's: its command's id, what its `tool` says, and its script, loaded again at each run.

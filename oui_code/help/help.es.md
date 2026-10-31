@@ -38,6 +38,9 @@ instalado aparte de sí mismo. Pulsa **Esc** para cerrar esta ayuda; **Izquierda
   para sus programas. Un grupo que se queda sin pestañas se cierra. Los
   comandos actúan en el grupo que tiene el foco; F4 pasa por todos, y las líneas entre ellos se pueden
   arrastrar.
+- **F11** muestra la pestaña sola en toda la pantalla, para escribir sin distracciones: sin barra de menús, barra de
+  estado, paneles, otros grupos ni fila de pestañas, y en una ventana tampoco barra de título. F11 otra vez lo
+  muestra todo como estaba.
 - **F9** abre la vista previa de un documento Markdown en una pestaña propia, que sigue al documento mientras
   escribes; F9 en la vista previa vuelve al documento. Sus enlaces se siguen con un clic, o con **Tab** hasta uno e
   **Intro**: otro archivo Markdown se lee en la vista previa, como en un navegador, y **Alt+Izquierda** y

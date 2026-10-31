@@ -35,6 +35,8 @@ through each.
   after; any other key ends it and does what it does, so you can start typing straight away. It works from a
   terminal tab too, which keeps every other key for its programs. A group left with no tabs closes. Commands act on the group with the focus; F4 goes
   round all of them, and the lines between them can be dragged.
+- **F11** shows the tab alone on the whole screen, to write without distractions: no menu bar, status bar, panels,
+  other groups or row of tabs, and in a window no title bar either. F11 again shows everything as it was.
 - **F9** opens a preview of a Markdown document in a tab of its own, which follows the document as you write;
   F9 on the preview goes back to the document. Its links are followed with a click, or with **Tab** to one and
   **Enter**: another Markdown file is read in the preview, as in a browser, and **Alt+Left** and **Alt+Right** go

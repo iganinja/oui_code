@@ -15,6 +15,7 @@ const keys = {
     f2: "\x1bOQ",
     f7: "\x1b[18~",
     f9: "\x1b[20~",
+    f11: "\x1b[23~",
     quit: "\x11",
     enter: "\r",
     tools: "\x1bt",
@@ -115,6 +116,24 @@ test("Ctrl+Page Down goes back to the tab used before, and on through the others
     expect("again later", front(await shown([keys.usedBefore, "", "", keys.usedBefore])), "gamma");
     expect("twice at once", front(await shown([keys.usedBefore, keys.usedBefore])), "alpha");
     expect("Ctrl+Page Up", front(await shown([keys.usedLongestAgo])), "alpha");
+});
+
+test("F11 shows the tab alone on the whole screen, and again everything round it", async () => {
+    const pages = {"notes.txt": "first line\n", "other.txt": "other\n"};
+    const shown = await session(ouiCode, ["other.txt", "notes.txt"], pages, [keys.f11, ""]);
+    expect("the document from the top row", shown.row(0).includes("1 first line"), true);
+    expect("no row of tabs", shown.find("notes.txt"), null);
+    expect("no status bar", shown.find("Ln 1"), null);
+    const typed = await session(ouiCode, ["other.txt", "notes.txt"], pages, [keys.f11, "X"]);
+    expect("written in", typed.row(0).includes("1 Xfirst line"), true);
+    const back = await session(ouiCode, ["other.txt", "notes.txt"], pages, [keys.f11, keys.f11, ""]);
+    expect("the menu bar", back.row(0).includes("File"), true);
+    expect("the tabs", back.row(1).includes("notes.txt"), true);
+    expect("the status bar", back.find("Ln 1") !== null, true);
+    // Ctrl+K and Right split the editor: the other group goes too, while the tab is alone.
+    const split = await session(ouiCode, ["other.txt", "notes.txt"], pages, ["\x0b", "\x1b[C", keys.f11, ""]);
+    expect("the tab's group alone", split.row(0).includes("1 first line"), true);
+    expect("not the other group", split.find("other"), null);
 });
 
 test("A file given that is not there yet opens empty under its name, and Ctrl+S makes it", async () => {

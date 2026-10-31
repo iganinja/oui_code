@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <initializer_list>
 #include <chrono>
 #include <memory>
 #include <string>
@@ -602,6 +603,10 @@ void Workbench::register_view_commands()
     m_application.commands().bind("view.least_recent_tab", {oui::Key::page_up, true});
     m_application.commands().bind("view.recent_tab", {oui::Key::tab, true});
     m_application.commands().bind("view.least_recent_tab", {oui::Key::shift_tab, true});
+    m_application.commands().register_command("view.distraction_free",
+                                              oui::translate("Commands", "Distraction-Free Mode"),
+                                              [this] { toggle_distraction_free(); });
+    m_application.commands().bind("view.distraction_free", {oui::Key::f11});
     m_application.commands().bind("view.tab_switcher.open", {oui::Key::f4, false, false, true});
     m_application.commands().bind("view.focus_explorer", {oui::Key::f4});
 #ifdef OUI_CODE_WINDOW
@@ -621,20 +626,22 @@ void Workbench::register_view_commands()
 
 std::vector<oui::MenuItem> Workbench::view_menu()
 {
-    std::vector<oui::MenuItem> view_items{"view.command_palette",
-                                          oui::menu_separator(),
-                                          "view.toggle_menu",
-                                          "view.toggle_project",
-                                          "view.toggle_explorer",
-                                          "view.split_editor",
-                                          "view.go_to_group",
-                                          "view.word_wrap",
-                                          "view.suggest_as_you_type",
-                                          "view.markdown_preview",
-                                          "view.code_todos",
-                                          "view.task_list",
-                                          oui::menu_separator(),
-                                          oui::menu_submenu(oui::translate("Menu", "S&yntax"), [this] { return syntax_menu(); })};
+    std::vector<oui::MenuItem> view_items{
+        "view.command_palette",
+        oui::menu_separator(),
+        "view.toggle_menu",
+        "view.toggle_project",
+        "view.toggle_explorer",
+        "view.distraction_free",
+        "view.split_editor",
+        "view.go_to_group",
+        "view.word_wrap",
+        "view.suggest_as_you_type",
+        "view.markdown_preview",
+        "view.code_todos",
+        "view.task_list",
+        oui::menu_separator(),
+        oui::menu_submenu(oui::translate("Menu", "S&yntax"), [this] { return syntax_menu(); })};
 #ifdef OUI_CODE_WINDOW
     if(m_options.window_screen != nullptr)
     {
@@ -782,6 +789,72 @@ void Workbench::step_recent_tab(int step)
                                                                    end_recent_tab_steps();
                                                                });
                                                        });
+}
+
+void Workbench::toggle_distraction_free()
+{
+    auto& tabs_reference{m_editors.active().tabs};
+    if(m_distraction_free)
+    {
+        const auto& shown{*m_distraction_free};
+        m_menu_bar->set_visible(shown.menu_bar);
+        m_status_bar->set_visible(shown.status_bar);
+        m_project_tree->set_visible(shown.project_tree);
+        m_file_explorer->set_visible(shown.explorer);
+        m_find_bar->set_visible(shown.find_bar);
+        if(auto* const tabs{shown.tabs.get()})
+        {
+            tabs->set_header_visible(true);
+        }
+        for(const auto& group : shown.other_groups)
+        {
+            if(auto* const widget{group.get()})
+            {
+                widget->set_visible(true);
+            }
+        }
+        m_distraction_free.reset();
+    }
+    else
+    {
+        ShownRound shown{m_menu_bar->is_visible(),
+                         m_status_bar->is_visible(),
+                         m_project_tree->is_visible(),
+                         m_file_explorer->is_visible(),
+                         m_find_bar->is_visible(),
+                         &tabs_reference,
+                         {}};
+        for(auto* const widget :
+            std::initializer_list<oui::Widget*>{m_menu_bar, m_status_bar, m_project_tree, m_file_explorer, m_find_bar})
+        {
+            widget->set_visible(false);
+        }
+        tabs_reference.set_header_visible(false);
+        // Up to the workspace, every split the tabs are in gives them the other side's room.
+        for(oui::Widget* inner{&tabs_reference};
+            inner->parent() != nullptr && dynamic_cast<oui::DockLayout*>(inner->parent()) == nullptr;
+            inner = inner->parent())
+        {
+            auto* const split{dynamic_cast<oui::SplitView*>(inner->parent())};
+            for(std::size_t index{}; split != nullptr && index < split->child_count(); ++ index)
+            {
+                auto& side{split->child_at(index)};
+                if(&side != inner && side.is_visible())
+                {
+                    side.set_visible(false);
+                    shown.other_groups.emplace_back(&side);
+                }
+            }
+        }
+        m_distraction_free = std::move(shown);
+    }
+#ifdef OUI_CODE_WINDOW
+    if(m_options.window_screen != nullptr)
+    {
+        m_options.window_screen->set_full_screen(m_distraction_free.has_value());
+    }
+#endif
+    focus_current_tab(m_application, tabs_reference);
 }
 
 void Workbench::end_recent_tab_steps()
