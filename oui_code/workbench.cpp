@@ -383,8 +383,10 @@ void Workbench::prepare_editor_tabs()
                             {
                                 return;
                             }
-                            const auto landed_on{where.y == to->tabs.bounds().y ? to->tabs.tab_at(where.x)
-                                                                                : std::nullopt};
+                            // On the tabs' row: in a window the pointer is anywhere in it, between cells.
+                            const auto landed_on{oui::whole(where.y - to->tabs.bounds().y) == 0
+                                                     ? to->tabs.tab_at(where.x)
+                                                     : std::nullopt};
                             if(to == from)
                             {
                                 if(landed_on)

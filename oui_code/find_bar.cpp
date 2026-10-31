@@ -218,7 +218,7 @@ bool FindBar::handle_event(const oui::Event& event)
             if(mouse->x >= popup.x && mouse->x < popup.x + popup.width && mouse->y >= popup.y &&
                mouse->y < popup.y + popup.height)
             {
-                const auto row{mouse->y - popup.y};
+                const auto row{oui::whole(mouse->y - popup.y)};
                 if(row < 3 && m_options_panel != nullptr)
                 {
                     auto* const checkbox{
