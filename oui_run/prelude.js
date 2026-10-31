@@ -77,8 +77,8 @@
 // api(oui_run): oui.language(): string
 // The language OUI's own texts are in, as "en" or "es".
 // api(oui_run): oui.setTheme(name: string): void
-// The look: "turbo", "night", "light", "monochrome", "amber", "phosphor" or "commander" in a terminal, and "classic"
-// in a window too.
+// The look: "turbo", "night", "light", "monochrome", "amber", "phosphor", "commander", "slate", "paper", "midnight" or
+// "contrast" in a terminal, and "classic" in a window too.
 // api(oui_run): oui.theme(): string
 // The look in use, by its name: the one chosen, or "classic" in a desktop window and "turbo" in a terminal.
 // api(oui_run): class oui.Box extends oui.Widget

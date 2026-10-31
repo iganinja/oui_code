@@ -845,8 +845,8 @@ test("a script's settings last from one run to the next, kept as JSON by name", 
 test("a theme that is not there is told with those the build has", async () => {
     const {output} = await runScript(`try { oui.setTheme("nope"); } catch (error) { console.log(error.message); }\n`);
     // classic is the desktop window's, and only a build with windows has it.
-    const themes = ouiRun.includes("gui") ? "turbo, night, light, monochrome, amber, phosphor, commander or classic" :
-        "turbo, night, light, monochrome, amber, phosphor or commander";
+    const terminal = "turbo, night, light, monochrome, amber, phosphor, commander, slate, paper, midnight";
+    const themes = ouiRun.includes("gui") ? `${terminal}, contrast or classic` : `${terminal} or contrast`;
     expect("output", output, `there is no theme nope: ${themes}\n`);
 });
 

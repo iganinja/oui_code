@@ -448,15 +448,16 @@ right click pastes.
 - The settings, `oui_code.ini`, and what is kept of unsaved work are beside OUI Code itself when its folder can be
   written, so it carries them along on a USB stick; otherwise, as when it is installed for the whole system, in
   your configuration folder: `~/.config/oui_code` on Linux, `%APPDATA%\oui_code` on Windows.
-- **View > Theme** picks the look in the terminal too: Turbo C++'s blue, Night, Light, or Monochrome for a terminal
-  of few colours. It is kept for the next time.
+- **View > Theme** picks the look in the terminal too: Turbo C++'s blue, Night, Light, Monochrome for a terminal
+  of few colours, and, softer on the eyes where the terminal shows every colour, Slate, Paper, Midnight and High
+  Contrast. It is kept for the next time.
 
 ## In a window
 
 OUI Code in its GUI kind also opens in a desktop window: from the desktop's menu, or typing `oui_code --window` in
 a terminal.
 Everything works as in the terminal, and the keys a terminal keeps for itself reach it. **View > Theme** picks its
-look, and **Ctrl++**, **Ctrl+-** and **Ctrl+0** make the text bigger, smaller or as it was; it keeps both for the
+look, the editor's colours with it, and **Ctrl++**, **Ctrl+-** and **Ctrl+0** make the text bigger, smaller or as it was; it keeps both for the
 next time. Tabs can be dragged by their title, to another place among their group's or to another group. Typed in a terminal without `--window`, it runs in the terminal, like the terminal kind.
 
 ## Terminals

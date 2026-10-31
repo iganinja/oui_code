@@ -465,14 +465,15 @@ El clic derecho pega.
 - Los ajustes, `oui_code.ini`, y lo que se conserva del trabajo sin guardar están junto al propio OUI Code cuando
   se puede escribir en su carpeta, así que viajan con él en un USB; si no, como cuando está instalado para todo el
   sistema, en tu carpeta de configuración: `~/.config/oui_code` en Linux, `%APPDATA%\oui_code` en Windows.
-- **Ver > Tema** elige el aspecto también en la terminal: el azul de Turbo C++, Noche, Claro, o Monocromo para una
-  terminal de pocos colores. Se guarda para la próxima vez.
+- **Ver > Tema** elige el aspecto también en la terminal: el azul de Turbo C++, Noche, Claro, Monocromo para una
+  terminal de pocos colores y, más descansados para la vista donde la terminal muestra todos los colores, Pizarra,
+  Papel, Medianoche y Alto contraste. Se guarda para la próxima vez.
 
 ## En una ventana
 
 OUI Code en su variante GUI se abre también en una ventana del escritorio: desde el menú del escritorio, o
 escribiendo `oui_code --window` en una terminal. Todo funciona como en la terminal, y le llegan las teclas que una terminal se queda para
-sí. **Ver > Tema** elige su aspecto, y **Ctrl++**, **Ctrl+-** y **Ctrl+0** agrandan el texto, lo encogen o lo dejan
+sí. **Ver > Tema** elige su aspecto, con los colores del editor, y **Ctrl++**, **Ctrl+-** y **Ctrl+0** agrandan el texto, lo encogen o lo dejan
 como estaba; las dos cosas se guardan para la próxima vez. Las pestañas se pueden arrastrar por su título, a otro
 sitio de su grupo o a otro grupo. Escrito en una terminal sin `--window`, funciona en la terminal, como
 la variante de terminal.

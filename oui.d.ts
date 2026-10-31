@@ -196,8 +196,8 @@ declare namespace oui {
     function setStatus(text: string, right?: string): void;
 
     /**
-     * The look: "turbo", "night", "light", "monochrome", "amber", "phosphor" or "commander" in a terminal, and "classic"
-     * in a window too.
+     * The look: "turbo", "night", "light", "monochrome", "amber", "phosphor", "commander", "slate", "paper", "midnight" or
+     * "contrast" in a terminal, and "classic" in a window too.
      * In: oui_run.
      */
     function setTheme(name: string): void;
