@@ -60,8 +60,8 @@ TEST(FindBarTests, ItsOptionsShowOverTheDocumentAboveIt)
     const auto row{row_of(*screen->last_frame(), bottom)};
     const auto star{row.find(U'*')};
     ASSERT_NE(star, std::u32string::npos);
-    application.dispatch_event(oui::MouseEvent{static_cast<int>(star), bottom, true});
-    application.dispatch_event(oui::MouseEvent{static_cast<int>(star), bottom, false, 0, false, true});
+    application.dispatch_event(oui::MouseEvent{static_cast<double>(star), bottom, true});
+    application.dispatch_event(oui::MouseEvent{static_cast<double>(star), bottom, false, 0, false, true});
     application.render();
 
     auto shown{false};

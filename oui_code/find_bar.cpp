@@ -198,7 +198,7 @@ void FindBar::paint(oui::Painter& painter, const oui::Theme& theme) const
     }
 }
 
-oui::Widget* FindBar::hit_test(int x, int y)
+oui::Widget* FindBar::hit_test(double x, double y)
 {
     if(m_options_open && options_bounds().x <= x && x < options_bounds().x + options_bounds().width &&
        options_bounds().y <= y && y < options_bounds().y + options_bounds().height)
@@ -277,7 +277,7 @@ bool FindBar::focus_option(int offset)
 
 oui::Rect FindBar::options_bounds() const
 {
-    return {bounds().x + std::max(0, bounds().width - 28), bounds().y - 3, 28, 3};
+    return {bounds().x + std::max(0.0, bounds().width - 28), bounds().y - 3, 28, 3};
 }
 
 oui::SearchOptions FindBar::search_options() const
@@ -372,7 +372,7 @@ bool FindBar::is_overlay() const
     return m_options_open && is_visible();
 }
 
-void FindBar::dismiss_overlays_at(int x, int y)
+void FindBar::dismiss_overlays_at(double x, double y)
 {
     const auto area{paint_bounds()};
     const auto inside{x >= area.x && x < area.x + area.width && y >= area.y && y < area.y + area.height};

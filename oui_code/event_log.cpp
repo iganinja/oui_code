@@ -19,12 +19,12 @@ void record_event(std::FILE* const output, const oui::Event& event)
     }
     else if(const auto* const resize{std::get_if<oui::ResizeEvent>(&event)})
     {
-        std::fprintf(output, "resize %d %d", resize->width, resize->height);
+        std::fprintf(output, "resize %d %d", oui::whole(resize->width), oui::whole(resize->height));
     }
     else if(const auto* const mouse{std::get_if<oui::MouseEvent>(&event)})
     {
-        std::fprintf(output, "mouse %d %d %d %d %d %d", mouse->x, mouse->y, mouse->pressed, mouse->wheel_delta,
-                     mouse->dragging, mouse->released);
+        std::fprintf(output, "mouse %d %d %d %d %d %d", oui::whole(mouse->x), oui::whole(mouse->y), mouse->pressed,
+                     mouse->wheel_delta, mouse->dragging, mouse->released);
     }
     std::fputc('\n', output);
     std::fflush(output);

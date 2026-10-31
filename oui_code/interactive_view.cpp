@@ -32,7 +32,7 @@ void ErrorLine::set_text(std::string text)
 
 oui::Size ErrorLine::measure(const oui::Constraints& constraints) const
 {
-    return constraints.constrain({std::max(1, constraints.max_width), 1});
+    return constraints.constrain({std::max(1.0, constraints.max_width), 1});
 }
 
 void ErrorLine::paint(oui::Painter& painter, const oui::Theme& theme) const

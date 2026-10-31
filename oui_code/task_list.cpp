@@ -497,7 +497,7 @@ void TasksView::arrange(const oui::Rect& bounds)
     Widget::arrange(bounds);
     // Where cells allow it, a gap on the left keeps the list apart from a panel beside the tab.
     const auto gap{oui::text_metrics().panel_gap()};
-    m_split->arrange({bounds.x + gap, bounds.y, std::max(0, bounds.width - gap), bounds.height});
+    m_split->arrange({bounds.x + gap, bounds.y, std::max(0.0, bounds.width - gap), bounds.height});
 }
 
 void TasksView::load()

@@ -39,10 +39,10 @@ class FindBar final : public olagarro::oui::Container
     void arrange(const olagarro::oui::Rect& bounds) override;
     [[nodiscard]] olagarro::oui::Rect paint_bounds() const override;
     void paint(olagarro::oui::Painter& painter, const olagarro::oui::Theme& theme) const override;
-    olagarro::oui::Widget* hit_test(int x, int y) override;
+    olagarro::oui::Widget* hit_test(double x, double y) override;
     // The options, while open, spill over the documents above the bar, so the bar paints after them.
     [[nodiscard]] bool is_overlay() const override;
-    void dismiss_overlays_at(int x, int y) override;
+    void dismiss_overlays_at(double x, double y) override;
     bool handle_event(const olagarro::oui::Event& event) override;
 
   private:

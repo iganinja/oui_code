@@ -177,7 +177,7 @@ class Canvas final : public oui::Widget
         {
             return false;
         }
-        m_on_mouse(*mouse, mouse->x - area.x, mouse->y - area.y);
+        m_on_mouse(*mouse, oui::whole(mouse->x - area.x), oui::whole(mouse->y - area.y));
         return true;
     }
 
@@ -902,7 +902,7 @@ void Host::fit_window()
     constexpr oui::Size most{120, 40};
     const auto width{std::clamp(m_described_size.width > 0 ? m_described_size.width : 80, least.width, most.width)};
     // Each part on its own: the frame round them takes whatever it is offered.
-    auto height{0};
+    auto height{0.0};
     for(const auto* const part : {m_top, m_middle, m_bottom})
     {
         height += part->measure({width, most.height}).height;
@@ -1143,7 +1143,7 @@ void Host::define_everything()
            {
                auto made{oui::panel()};
                const auto padding{argument(a, 0)};
-               const auto side{[&padding](std::size_t index)
+               const auto side{[&padding](std::size_t index) -> double
                                {
                                    return padding.is_array() ? static_cast<int>(padding.at(index).to_number())
                                                              : static_cast<int>(padding.to_number());
@@ -2301,8 +2301,9 @@ void Host::define_everything()
            [this](const Arguments& a)
            {
                auto canvas{std::make_unique<Canvas>()};
-               canvas->set_size(
-                   {static_cast<int>(argument(a, 0).to_number()), static_cast<int>(argument(a, 1).to_number())});
+               const auto number{[&a](std::size_t index) -> double
+                                 { return static_cast<int>(argument(a, index).to_number()); }};
+               canvas->set_size({number(0), number(1)});
                return m_engine.number(adopt(std::move(canvas)));
            });
     define("canvasClear",
@@ -2319,7 +2320,8 @@ void Host::define_everything()
            [this](const Arguments& a)
            {
                auto& canvas{widget<Canvas>(id_of(a, 0), "canvas")};
-               const auto number{[&a](std::size_t index) { return static_cast<int>(argument(a, index).to_number()); }};
+               const auto number{[&a](std::size_t index) -> double
+                                 { return static_cast<int>(argument(a, index).to_number()); }};
                const auto style{argument(a, 6)};
                Canvas::Stroke stroke{{number(1), number(2), number(3), number(4)}, text_of(argument(a, 5)), {}, {}, 0};
                if(style.is_object())
@@ -2373,7 +2375,7 @@ void Host::define_everything()
            [this](const Arguments& a)
            {
                const auto options{argument(a, 2)};
-               const auto number{[&options](std::string_view name)
+               const auto number{[&options](std::string_view name) -> double
                                  {
                                      const auto value{options.get(name)};
                                      return value.is_undefined() ? 0 : static_cast<int>(value.to_number());

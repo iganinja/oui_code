@@ -423,11 +423,11 @@ void Workbench::remember_dialog_places()
             oui::WindowPlacement placement;
             if(const auto x{read("x")}, y{read("y")}; x && y)
             {
-                placement.position = oui::Point{*x, *y};
+                placement.position = oui::Point{static_cast<double>(*x), static_cast<double>(*y)};
             }
             if(const auto width{read("width")}, height{read("height")}; width && height)
             {
-                placement.size = oui::Size{*width, *height};
+                placement.size = oui::Size{static_cast<double>(*width), static_cast<double>(*height)};
             }
             return placement;
         },
@@ -436,10 +436,10 @@ void Workbench::remember_dialog_places()
             const auto prefix{"window." + std::string{key} + "."};
             const auto write{[this, &prefix](const char* const field, std::optional<int> value)
                              { m_settings.set_value(prefix + field, value ? std::to_string(*value) : ""); }};
-            write("x", placement.position ? std::optional<int>{placement.position->x} : std::nullopt);
-            write("y", placement.position ? std::optional<int>{placement.position->y} : std::nullopt);
-            write("width", placement.size ? std::optional<int>{placement.size->width} : std::nullopt);
-            write("height", placement.size ? std::optional<int>{placement.size->height} : std::nullopt);
+            write("x", placement.position ? std::optional{oui::whole(placement.position->x)} : std::nullopt);
+            write("y", placement.position ? std::optional{oui::whole(placement.position->y)} : std::nullopt);
+            write("width", placement.size ? std::optional{oui::whole(placement.size->width)} : std::nullopt);
+            write("height", placement.size ? std::optional{oui::whole(placement.size->height)} : std::nullopt);
             static_cast<void>(m_settings.save());
         });
 }
@@ -822,7 +822,7 @@ void Workbench::install_status_bar()
                                 : std::string{tabs_reference.title(index)}};
             const auto room{m_status_bar->bounds().width - oui::status_keys_width(keys) - oui::text_width(version) -
                             oui::text_width(rest) - 1};
-            return {fit_from_start(name, std::max(8, room)) + rest, version, keys};
+            return {fit_from_start(name, std::max(8, oui::whole(room))) + rest, version, keys};
         });
 }
 

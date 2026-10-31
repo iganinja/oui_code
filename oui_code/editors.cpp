@@ -301,7 +301,7 @@ EditorGroup* Editors::neighbour(const EditorGroup& group, Side side)
 {
     const auto from{group.tabs.bounds()};
     EditorGroup* best{};
-    std::pair<int, int> best_score{};
+    std::pair<double, double> best_score{};
     for(auto& other : m_groups)
     {
         if(&other == &group)

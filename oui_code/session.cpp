@@ -179,7 +179,7 @@ oui::WindowGeometry window_geometry_from(const oui::Settings& settings)
     const auto y{number("window_y")};
     if(x && y)
     {
-        geometry.position = oui::Point{*x, *y};
+        geometry.position = oui::Point{static_cast<double>(*x), static_cast<double>(*y)};
     }
     geometry.size.width = number("window_width").value_or(geometry.size.width);
     geometry.size.height = number("window_height").value_or(geometry.size.height);
@@ -196,11 +196,11 @@ void save_window_geometry(oui::Settings& settings, const oui::DesktopWindow* win
     const auto geometry{window->geometry()};
     if(geometry.position)
     {
-        settings.set_value("window_x", std::to_string(geometry.position->x));
-        settings.set_value("window_y", std::to_string(geometry.position->y));
+        settings.set_value("window_x", std::to_string(oui::whole(geometry.position->x)));
+        settings.set_value("window_y", std::to_string(oui::whole(geometry.position->y)));
     }
-    settings.set_value("window_width", std::to_string(geometry.size.width));
-    settings.set_value("window_height", std::to_string(geometry.size.height));
+    settings.set_value("window_width", std::to_string(oui::whole(geometry.size.width)));
+    settings.set_value("window_height", std::to_string(oui::whole(geometry.size.height)));
     settings.set_bool_value("window_maximized", geometry.maximized);
 }
 #endif
