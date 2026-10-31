@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <chrono>
 #include <memory>
 #include <string>
 #include <utility>
@@ -586,17 +587,21 @@ void Workbench::register_view_commands()
             m_switcher_original_index.reset();
             focus_current_tab(m_application, tabs_reference);
         });
-    // Ctrl+Page Down and Ctrl+Page Up, and Ctrl+Tab and Ctrl+Shift+Tab where they arrive (in a window: most terminals
-    // keep them for their own tabs), go straight to the tab beside, wrapping round at the ends, with nothing to
-    // wait for.
+    // Ctrl+Page Down, and Ctrl+Tab where it arrives (in a window: most terminals keep it for their own tabs), go
+    // straight back to the tab used before, and on to the one before that while Ctrl is held, as editors do;
+    // Ctrl+Page Up and Ctrl+Shift+Tab start from the one used longest ago. The tab beside is a command without keys.
     m_application.commands().register_command("view.next_tab", oui::translate("Commands", "Next Tab"),
                                               [this] { step_tab(1); });
     m_application.commands().register_command("view.previous_tab", oui::translate("Commands", "Previous Tab"),
                                               [this] { step_tab(-1); });
-    m_application.commands().bind("view.next_tab", {oui::Key::page_down, true});
-    m_application.commands().bind("view.previous_tab", {oui::Key::page_up, true});
-    m_application.commands().bind("view.next_tab", {oui::Key::tab, true});
-    m_application.commands().bind("view.previous_tab", {oui::Key::shift_tab, true});
+    m_application.commands().register_command("view.recent_tab", oui::translate("Commands", "Tab Used Before"),
+                                              [this] { step_recent_tab(1); });
+    m_application.commands().register_command(
+        "view.least_recent_tab", oui::translate("Commands", "Tab Used Longest Ago"), [this] { step_recent_tab(-1); });
+    m_application.commands().bind("view.recent_tab", {oui::Key::page_down, true});
+    m_application.commands().bind("view.least_recent_tab", {oui::Key::page_up, true});
+    m_application.commands().bind("view.recent_tab", {oui::Key::tab, true});
+    m_application.commands().bind("view.least_recent_tab", {oui::Key::shift_tab, true});
     m_application.commands().bind("view.tab_switcher.open", {oui::Key::f4, false, false, true});
     m_application.commands().bind("view.focus_explorer", {oui::Key::f4});
 #ifdef OUI_CODE_WINDOW
@@ -742,4 +747,47 @@ void Workbench::step_tab(int step)
     const auto current{static_cast<int>(tabs_reference.selected_index())};
     tabs_reference.select(static_cast<std::size_t>((current + step + count) % count));
     focus_current_tab(m_application, tabs_reference);
+}
+
+void Workbench::step_recent_tab(int step)
+{
+    auto& tabs_reference{m_editors.active().tabs};
+    tabs_reference.step_recent(step);
+    focus_current_tab(m_application, tabs_reference);
+    if(m_application.reports_modifiers())
+    {
+        if(!m_hears_recent_tab_steps_end)
+        {
+            m_hears_recent_tab_steps_end = true;
+            static_cast<void>(m_application.on_modifiers_changed(
+                [this](const oui::ModifiersEvent& modifiers)
+                {
+                    if(!modifiers.control)
+                    {
+                        end_recent_tab_steps();
+                    }
+                }));
+        }
+        return;
+    }
+    m_recent_tab_steps_end = m_application.start_timer(std::chrono::milliseconds{1000},
+                                                       [this]
+                                                       {
+                                                           // Out of the timer's own call, which stopping it would cut
+                                                           // short.
+                                                           m_application.post(
+                                                               [this]
+                                                               {
+                                                                   m_recent_tab_steps_end.stop();
+                                                                   end_recent_tab_steps();
+                                                               });
+                                                       });
+}
+
+void Workbench::end_recent_tab_steps()
+{
+    for(auto& group : m_editors.groups())
+    {
+        group.tabs.end_recent_steps();
+    }
 }

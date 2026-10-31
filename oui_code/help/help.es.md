@@ -20,8 +20,9 @@ instalado aparte de sí mismo. Pulsa **Esc** para cerrar esta ayuda; **Izquierda
   cerrado entretanto se abre de nuevo.
 - **Ctrl+P** va a un archivo del proyecto escribiendo parte de su nombre (ver *Buscar archivos*).
 - **F4** pasa el foco por el árbol del proyecto, el editor y el explorador.
-- **Ctrl+Av Pág** y **Ctrl+Re Pág** van a la pestaña siguiente y a la anterior, de la última a la primera al
-  llegar al final. **Mayús+F4** lista las pestañas abiertas, para elegir una con las flechas e Intro. En
+- **Ctrl+Av Pág** vuelve a la pestaña usada antes y, pulsada otra vez enseguida, o sin soltar Ctrl en una ventana,
+  a la usada antes de esa, como en los editores; **Ctrl+Re Pág** empieza por la usada hace más tiempo. **Mayús+F4**
+  lista las pestañas abiertas, para elegir una con las flechas e Intro. En
   una ventana, **Ctrl+Tab** y **Ctrl+Mayús+Tab** hacen lo mismo que Ctrl+Av Pág y Ctrl+Re Pág.
 - Una pestaña muestra el nombre del archivo; la barra de estado muestra su ruta completa, y también la muestra
   dejar el puntero quieto sobre la pestaña.

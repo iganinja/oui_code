@@ -151,6 +151,10 @@ class Workbench
     [[nodiscard]] std::vector<olagarro::oui::MenuItem> syntax_menu();
     // To the tab `step` away in the active group, wrapping round at the ends.
     void step_tab(int step);
+    // To the tab used before in the active group (`step` 1), or the one used longest ago (-1), going on from there
+    // while Ctrl is held, or while the keys come one soon after another where Ctrl cannot be heard letting go.
+    void step_recent_tab(int step);
+    void end_recent_tab_steps();
 
     // tools_commands.cpp
     // Scripts: OUI Code's own, then the user's from a folder beside the settings. They define languages, which colour
@@ -292,6 +296,9 @@ class Workbench
     olagarro::oui::TabSwitcher m_tab_switcher;
     // The tab the tab list started on, which Escape goes back to.
     std::optional<std::size_t> m_switcher_original_index;
+    // Ends a run of Ctrl+Page Down where the letting go of Ctrl is not told, a moment after the last.
+    olagarro::oui::Timer m_recent_tab_steps_end;
+    bool m_hears_recent_tab_steps_end{false};
 
     std::unique_ptr<Scripting> m_scripting;
     // A tool of the user's: its command's id, what its `tool` says, and its script, loaded again at each run.

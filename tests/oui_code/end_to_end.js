@@ -18,8 +18,9 @@ const keys = {
     quit: "\x11",
     enter: "\r",
     tools: "\x1bt",
-    previousTab: "\x1b[5;5~",
-    nextTab: "\x1b[6;5~",
+    // Ctrl+Page Down and Ctrl+Page Up: to the tab used before, and to the one used longest ago.
+    usedBefore: "\x1b[6;5~",
+    usedLongestAgo: "\x1b[5;5~",
 };
 
 const cases = [];
@@ -64,7 +65,7 @@ test("Compare with Saved shows what the document has that its file does not", as
 
 test("A comparison follows the document as it is edited", async () => {
     // Compare with Saved, back to the document to write some more, and to the comparison again.
-    const shown = await session(ouiCode, ["left.txt"], files, ["X", keys.tools, "s", keys.previousTab, "Y", keys.nextTab]);
+    const shown = await session(ouiCode, ["left.txt"], files, ["X", keys.tools, "s", keys.usedBefore, "Y", keys.usedBefore]);
     expect("the edited line, as it is now", shown.find("1 XYone", 2)?.colours, "97;42");
 });
 
@@ -102,6 +103,18 @@ test("Files given on the command line open over the session left, every one of t
         expect(title, tabs.includes(title), true);
     }
     expect("the last one given in front", shown.find("a note") !== null, true);
+});
+
+test("Ctrl+Page Down goes back to the tab used before, and on through the others while pressed again soon", async () => {
+    const pages = {"a.txt": "alpha\n", "b.txt": "beta\n", "c.txt": "gamma\n"};
+    // Opened in that order, c.txt in front: b.txt was used before it, and a.txt before that.
+    const shown = (pressed) => session(ouiCode, ["a.txt", "b.txt", "c.txt"], pages, pressed);
+    const front = (screen) => ["alpha", "beta", "gamma"].find((word) => screen.find(word) !== null);
+    expect("once", front(await shown([keys.usedBefore])), "beta");
+    // A moment later, another starts again from there: back to where it began.
+    expect("again later", front(await shown([keys.usedBefore, "", "", keys.usedBefore])), "gamma");
+    expect("twice at once", front(await shown([keys.usedBefore, keys.usedBefore])), "alpha");
+    expect("Ctrl+Page Up", front(await shown([keys.usedLongestAgo])), "alpha");
 });
 
 test("A file given that is not there yet opens empty under its name, and Ctrl+S makes it", async () => {
@@ -148,7 +161,7 @@ test("F1 in a comparison opens the help at comparing files", async () => {
 test("The tabs come back after quitting, in their order, each as what it was", async () => {
     const here = await place(ouiCode, files);
     // From left.txt: an interactive script on it, its preview, a comparison with its file and a calculator.
-    await here.run(["left.txt"], [keys.tools, "i", keys.previousTab, keys.f9, keys.previousTab, keys.previousTab,
+    await here.run(["left.txt"], [keys.tools, "i", keys.usedBefore, keys.f9, keys.usedBefore,
         keys.tools, "s", keys.tools, "l", "interes = 800*0.03\r", keys.quit]);
     const shown = await here.run([], ["interes + 1\r"]);
     await here.remove();
@@ -400,7 +413,7 @@ test("F4 into the calculator's tab writes at its prompt", async () => {
 test("Interactive UI asked for again goes to the tab there is, rather than make another", async () => {
     // From the description, from its interactive tab, and from the description again.
     const shown = await session(ouiCode, ["form.oui"], descriptions,
-        [keys.tools, "u", keys.tools, "u", keys.previousTab, keys.tools, "u"]);
+        [keys.tools, "u", keys.tools, "u", keys.usedBefore, keys.tools, "u"]);
     expect("the tabs", shown.row(1).trim(), "form.oui ×  form.oui (interactive) ×");
 });
 
@@ -504,7 +517,7 @@ test("New beside Generate starts a script on what Generate writes, and saved it 
     const asking = await session(ouiCode, ["form.oui"], descriptions, [...create, "\x13"]);
     expect("the name offered", asking.find("untitled.js") !== null, true);
     const saved = await session(ouiCode, ["form.oui"], descriptions,
-        [...create, "\x13", keys.enter, keys.previousTab]);
+        [...create, "\x13", keys.enter, keys.usedBefore]);
     // On the row of the box, not the tab's title, which says the name too.
     expect("the script beside Generate", saved.row(box.row).includes("untitled.js"), true);
 });

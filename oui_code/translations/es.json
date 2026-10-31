@@ -83,6 +83,8 @@
       "Split Editor...": "Dividir el editor...",
       "Suggest": "Sugerir",
       "Tab List": "Lista de pestañas",
+      "Tab Used Before": "Pestaña usada antes",
+      "Tab Used Longest Ago": "Pestaña usada hace más tiempo",
       "Task &List": "&Lista de tareas",
       "Template: Script on Its Own (process)": "Plantilla: script por su cuenta (process)",
       "Template: Script on the Document (processFile)": "Plantilla: script sobre el documento (processFile)",

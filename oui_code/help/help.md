@@ -20,7 +20,8 @@ through each.
   however it went there: Go to Line, a search, a click, a file opened. **Alt+→** goes forward again. A document
   closed since opens again.
 - **F4** moves the focus round the project tree, the editor and the explorer.
-- **Ctrl+Page Down** and **Ctrl+Page Up** go to the next and the previous tab, round from the last to the first.
+- **Ctrl+Page Down** goes back to the tab used before, and pressed again soon after, or with Ctrl still held in a
+  window, on to the one used before that, as editors do; **Ctrl+Page Up** starts from the one used longest ago.
   **Shift+F4** lists the open tabs, to pick one with the arrows and Enter. In a window, **Ctrl+Tab** and
   **Ctrl+Shift+Tab** do the same as Ctrl+Page Down and Ctrl+Page Up.
 - A tab shows the file's name; the status bar shows its whole path, and so does resting the pointer on the tab.
