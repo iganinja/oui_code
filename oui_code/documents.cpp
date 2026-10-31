@@ -54,13 +54,14 @@ std::string shown_path(const std::filesystem::path& path)
     return text;
 }
 
-std::string fit_from_start(std::string text, int width)
+std::string fit_from_start(std::string text, double width)
 {
-    if(oui::text_width(text) <= width)
+    const auto& metrics{oui::text_metrics()};
+    if(metrics.label_width(text) <= width)
     {
         return text;
     }
-    while(!text.empty() && oui::text_width(text) + 1 > width)
+    while(!text.empty() && metrics.label_width("…" + text) > width)
     {
         std::size_t next{};
         static_cast<void>(oui::decode_utf8(text, next));

@@ -221,6 +221,9 @@ if(OUI_CODE_BUILD_TESTS)
         tests/oui_code/help_test.cpp
         oui_code/session_entry.cpp
         tests/oui_code/session_entry_test.cpp
+        oui_code/documents.cpp
+        oui_code/dialogs.cpp
+        tests/oui_code/documents_test.cpp
         tests/translation_test.cpp)
     target_include_directories(oui_code_tests PRIVATE oui_code)
     olagarro_embed_files(oui_code_tests FUNCTION embedded_oui_code_help

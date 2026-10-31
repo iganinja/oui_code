@@ -822,9 +822,10 @@ void Workbench::install_status_bar()
             const auto name{index < documents.size() && documents.at(index).path
                                 ? shown_path(*documents.at(index).path)
                                 : std::string{tabs_reference.title(index)}};
-            const auto room{m_status_bar->bounds().width - oui::status_keys_width(keys) - oui::text_width(version) -
-                            oui::text_width(rest) - 1};
-            return {fit_from_start(name, std::max(8, oui::whole(room))) + rest, version, keys};
+            const auto& metrics{oui::text_metrics()};
+            const auto room{m_status_bar->bounds().width - oui::status_keys_width(keys) - metrics.label_width(version) -
+                            metrics.label_width(rest) - 1};
+            return {fit_from_start(name, std::max(8.0, room)) + rest, version, keys};
         });
 }
 

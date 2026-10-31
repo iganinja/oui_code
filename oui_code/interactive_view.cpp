@@ -39,9 +39,7 @@ void ErrorLine::paint(oui::Painter& painter, const oui::Theme& theme) const
 {
     const oui::TextStyle style{theme.status_foreground, theme.status_background, oui::text_bold};
     painter.fill_rect(bounds(), style.background);
-    painter.push_clip(bounds());
-    painter.draw_label({bounds().x + 1, bounds().y}, m_text, style);
-    painter.pop_clip();
+    painter.draw_label({bounds().x + 1, bounds().y, std::max(0.0, bounds().width - 1), 1}, m_text, style);
 }
 
 bool ErrorLine::handle_event(const oui::Event& event)

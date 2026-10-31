@@ -119,8 +119,9 @@ struct Document
 [[nodiscard]] std::string document_tab_title(const std::filesystem::path& path, bool interactive);
 // A file's whole path as OUI Code shows it, with the home folder as ~ where that is the custom.
 [[nodiscard]] std::string shown_path(const std::filesystem::path& path);
-// `text` cut from its start to fit `width` cells, with "…" where it was cut, as a path keeps its end.
-[[nodiscard]] std::string fit_from_start(std::string text, int width);
+// `text` cut from its start to fit `width` cells as a label shows it, with "…" where it was cut, as a path keeps its
+// end.
+[[nodiscard]] std::string fit_from_start(std::string text, double width);
 
 // A text editor as OUI Code's documents have it, and the settings for tabs and wrapping applied to one.
 [[nodiscard]] std::unique_ptr<olagarro::oui::TextEdit> make_editor();
