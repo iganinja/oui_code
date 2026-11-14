@@ -309,7 +309,8 @@ and calls `after_event` after each event, from its event observer (`watch_events
 
 ## Search and navigation
 
-- The find bar ([find_bar.cpp](../oui_code/find_bar.cpp)) sits under the documents and follows the tab shown;
+- The find bar ([find_bar.cpp](../oui_code/find_bar.cpp)) sits under the documents and follows the tab shown, a
+  document or a Markdown preview, which finds in its text as shown (`MarkdownView::find_next`);
   replace and go to line are dialogs ([dialogs.cpp](../oui_code/dialogs.cpp)).
 - Go to File (Ctrl+P) and Find in Files (Ctrl+Shift+F) take their files from `project_files`
   ([project_search.cpp](../oui_code/project_search.cpp)), which leaves out what git ignores

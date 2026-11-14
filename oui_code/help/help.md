@@ -41,7 +41,8 @@ through each.
   F9 on the preview goes back to the document. Its links are followed with a click, or with **Tab** to one and
   **Enter**: another Markdown file is read in the preview, as in a browser, and **Alt+Left** and **Alt+Right** go
   back and forward; a section of one goes to its heading; a web address opens in the browser.
-  **Ctrl+Shift+E** opens the file the preview shows to edit it.
+  **Ctrl+Shift+E** opens the file the preview shows to edit it. **Ctrl+F** finds in the preview's text as it shows
+  it, as in a document, from the top of what is in view.
 
 - **Ctrl+T** opens a new tab, of what it is to hold: a new file, a terminal, the calculator, an interactive script
   or user interface, a comparison of two files, the task list or the code's TODOs.

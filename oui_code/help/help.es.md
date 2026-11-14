@@ -45,7 +45,8 @@ instalado aparte de sí mismo. Pulsa **Esc** para cerrar esta ayuda; **Izquierda
   escribes; F9 en la vista previa vuelve al documento. Sus enlaces se siguen con un clic, o con **Tab** hasta uno e
   **Intro**: otro archivo Markdown se lee en la vista previa, como en un navegador, y **Alt+Izquierda** y
   **Alt+Derecha** van atrás y adelante; una sección de uno va a su título; una dirección web se abre en el navegador.
-  **Ctrl+Mayús+E** abre para editarlo el archivo que enseña la vista previa.
+  **Ctrl+Mayús+E** abre para editarlo el archivo que enseña la vista previa. **Ctrl+F** busca en el texto de la
+  vista previa tal como lo enseña, como en un documento, desde lo primero que está a la vista.
 
 - **Ctrl+T** abre una pestaña nueva, de lo que vaya a tener: un archivo nuevo, una terminal, la calculadora, un
   script o una interfaz interactivos, la comparación de dos archivos, la lista de tareas o los TODO del código.

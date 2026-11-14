@@ -4,6 +4,7 @@
 #include <oui/button.h>
 #include <oui/check_button.h>
 #include <oui/line_edit.h>
+#include <oui/markdown_view.h>
 #include <oui/dock_layout.h>
 #include <oui/scripted_backend.h>
 #include <oui/text_edit.h>
@@ -204,4 +205,46 @@ TEST(FindBarTests, ItsOptionsTakeTheFocusAndEscapeGivesItBackToTheField)
     {
         EXPECT_EQ(row_of(*screen->last_frame(), y).find(U"Whole word"), std::u32string::npos);
     }
+}
+
+TEST(FindBarTests, FindsInAMarkdownPreviewAsItShowsItAndBackInADocument)
+{
+    auto backend{oui::scripted_backend({}, {60, 6})};
+    auto* const screen{backend.get()};
+    oui::Application application{std::move(backend)};
+    auto window{oui::window("Test")};
+    window->set_border(oui::WindowBorder::none);
+    auto layout{oui::dock_layout()};
+    auto preview{oui::markdown_view("# Two\n\none **two** three two")};
+    auto& preview_reference{*preview};
+    oui::TextEdit document;
+    document.set_text("two");
+    auto bar{std::make_unique<FindBar>(application, document)};
+    auto& bar_reference{*bar};
+    layout->add(oui::Dock::bottom, std::move(bar));
+    layout->add(oui::Dock::fill, std::move(preview));
+    window->add(std::move(layout));
+    application.set_window(std::move(window));
+    application.render();
+    bar_reference.open(preview_reference);
+    for(const auto character : std::u32string{U"two"})
+    {
+        application.dispatch_event(oui::TextEvent{character});
+    }
+    application.render();
+    EXPECT_EQ(preview_reference.search_match_count(), 3u) << "the heading's Two too, the case not minded";
+    EXPECT_NE(row_of(*screen->last_frame(), 5).find(U"1 of 3"), std::u32string::npos);
+    bar_reference.next_match();
+    application.render();
+    EXPECT_NE(row_of(*screen->last_frame(), 5).find(U"2 of 3"), std::u32string::npos);
+    // Enter goes to the match in the preview.
+    application.dispatch_event(oui::KeyEvent{oui::Key::enter});
+    EXPECT_EQ(application.focused(), &preview_reference);
+    EXPECT_EQ(preview_reference.selected_search_match(), 3u);
+
+    bar_reference.set_document(document);
+    EXPECT_EQ(preview_reference.search_match_count(), 0u) << "the preview's matches go with it";
+    EXPECT_EQ(document.search_match_count(), 1u);
+    bar_reference.close();
+    EXPECT_EQ(document.search_match_count(), 0u);
 }

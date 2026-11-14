@@ -138,19 +138,30 @@ void Workbench::register_edit_commands()
             {
                 tasks->focus_search();
             }
+            // A Markdown preview, in its text as it shows it.
+            else if(auto* const preview{tabs_reference.selected_content<oui::MarkdownView>()})
+            {
+                m_find_bar->open(*preview);
+            }
         });
-    m_application.commands().register_command("edit.find_next", oui::translate("Commands", "Find Next"),
-                                              [this]
-                                              {
-                                                  auto& group{m_editors.active()};
-                                                  auto& tabs_reference{group.tabs};
+    m_application.commands().register_command(
+        "edit.find_next", oui::translate("Commands", "Find Next"),
+        [this]
+        {
+            auto& group{m_editors.active()};
+            auto& tabs_reference{group.tabs};
 
-                                                  if(auto* const current{selected_document_editor(tabs_reference)})
-                                                  {
-                                                      m_find_bar->set_document(*current);
-                                                      m_find_bar->next_match();
-                                                  }
-                                              });
+            if(auto* const current{selected_document_editor(tabs_reference)})
+            {
+                m_find_bar->set_document(*current);
+                m_find_bar->next_match();
+            }
+            else if(auto* const preview{tabs_reference.selected_content<oui::MarkdownView>()})
+            {
+                m_find_bar->set_document(*preview);
+                m_find_bar->next_match();
+            }
+        });
     m_application.commands().register_command(
         "edit.find_selected", oui::translate("Commands", "Find Next of the Selection"),
         [this]
@@ -160,18 +171,24 @@ void Workbench::register_edit_commands()
                 m_find_bar->find_selected(*current);
             }
         });
-    m_application.commands().register_command("edit.find_previous", oui::translate("Commands", "Find Previous"),
-                                              [this]
-                                              {
-                                                  auto& group{m_editors.active()};
-                                                  auto& tabs_reference{group.tabs};
+    m_application.commands().register_command(
+        "edit.find_previous", oui::translate("Commands", "Find Previous"),
+        [this]
+        {
+            auto& group{m_editors.active()};
+            auto& tabs_reference{group.tabs};
 
-                                                  if(auto* const current{selected_document_editor(tabs_reference)})
-                                                  {
-                                                      m_find_bar->set_document(*current);
-                                                      m_find_bar->previous_match();
-                                                  }
-                                              });
+            if(auto* const current{selected_document_editor(tabs_reference)})
+            {
+                m_find_bar->set_document(*current);
+                m_find_bar->previous_match();
+            }
+            else if(auto* const preview{tabs_reference.selected_content<oui::MarkdownView>()})
+            {
+                m_find_bar->set_document(*preview);
+                m_find_bar->previous_match();
+            }
+        });
     m_application.commands().register_command("edit.replace", oui::translate("Commands", "Replace"),
                                               [this]
                                               {

@@ -6,6 +6,7 @@
 #include <oui/label.h>
 #include <oui/layout.h>
 #include <oui/line_edit.h>
+#include <oui/markdown_view.h>
 #include <oui/text_edit.h>
 #include <oui/text_search.h>
 
@@ -26,8 +27,11 @@ class FindBar final : public olagarro::oui::Container
     FindBar& operator=(const FindBar&) = delete;
 
     void open(olagarro::oui::TextEdit& document);
+    // A Markdown preview: it finds in the text as the preview shows it, until a document is given again.
+    void open(olagarro::oui::MarkdownView& preview);
     // The tab the user switched to: the matches move with it while the bar is open.
     void set_document(olagarro::oui::TextEdit& document);
+    void set_document(olagarro::oui::MarkdownView& preview);
     void close();
     void next_match();
     void previous_match();
@@ -63,10 +67,15 @@ class FindBar final : public olagarro::oui::Container
     void update_count();
     // The document it finds in, while it is still there.
     [[nodiscard]] olagarro::oui::TextEdit* shown_document() const;
+    // The preview it finds in instead of a document, while it is still there.
+    [[nodiscard]] olagarro::oui::MarkdownView* shown_preview() const;
+    // What it finds in, the document or the preview, to go back to.
+    [[nodiscard]] olagarro::oui::Widget* shown_target() const;
 
     olagarro::oui::Application& m_application;
     // The document it finds in, which may close: another may be made where it was, and is not it.
     olagarro::oui::WidgetRef<olagarro::oui::TextEdit> m_document;
+    olagarro::oui::WidgetRef<olagarro::oui::MarkdownView> m_preview;
     olagarro::oui::LineEdit* m_query{};
     olagarro::oui::Label* m_count{};
     // Where the cursor was when the bar opened, which typing finds from.

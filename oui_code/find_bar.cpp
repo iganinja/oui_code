@@ -24,7 +24,7 @@ FindBar::FindBar(oui::Application& application, oui::TextEdit& document)
             // A match found means the document is there.
             if(find_match(true))
             {
-                m_application.focus(*shown_document());
+                m_application.focus(*shown_target());
             }
         });
     // Matches show as soon as there is something to find, and the first one from where the search started
@@ -95,8 +95,42 @@ void FindBar::open(oui::TextEdit& document)
     m_query->select_all();
 }
 
+void FindBar::open(oui::MarkdownView& preview)
+{
+    set_document(preview);
+    set_visible(true);
+    refresh();
+    m_application.focus(*m_query);
+    m_query->select_all();
+}
+
+void FindBar::set_document(oui::MarkdownView& preview)
+{
+    if(auto* const document{shown_document()})
+    {
+        document->clear_search_highlight();
+    }
+    for(const auto& connection : m_document_connections)
+    {
+        connection.disconnect();
+    }
+    m_document_connections.clear();
+    m_document = static_cast<oui::TextEdit*>(nullptr);
+    if(auto* const current{shown_preview()}; current != nullptr && current != &preview)
+    {
+        current->clear_search_highlight();
+    }
+    m_preview = &preview;
+    refresh();
+}
+
 void FindBar::set_document(oui::TextEdit& document)
 {
+    if(auto* const preview{shown_preview()})
+    {
+        preview->clear_search_highlight();
+        m_preview = static_cast<oui::MarkdownView*>(nullptr);
+    }
     auto* const current{shown_document()};
     if(current != nullptr && current != &document)
     {
@@ -113,7 +147,12 @@ void FindBar::set_document(oui::TextEdit& document)
 void FindBar::close()
 {
     set_visible(false);
-    if(auto* const document{shown_document()})
+    if(auto* const preview{shown_preview()})
+    {
+        preview->clear_search_highlight();
+        m_application.focus(*preview);
+    }
+    else if(auto* const document{shown_document()})
     {
         document->clear_search_highlight();
         m_application.focus(*document);
@@ -291,6 +330,12 @@ oui::SearchOptions FindBar::search_options() const
 
 void FindBar::find_as_typed()
 {
+    // A preview chose none with the new query: the first from the top of what it shows.
+    if(auto* const preview{shown_preview()}; preview != nullptr && is_visible())
+    {
+        static_cast<void>(find_match(true));
+        return;
+    }
     auto* const document{shown_document()};
     if(document == nullptr || !is_visible())
     {
@@ -306,6 +351,14 @@ void FindBar::find_as_typed()
 
 bool FindBar::find_match(bool forward)
 {
+    if(auto* const preview{shown_preview()})
+    {
+        const auto found{!m_query->text().empty() &&
+                         (forward ? preview->find_next(m_query->text(), search_options())
+                                  : preview->find_previous(m_query->text(), search_options()))};
+        update_count();
+        return found;
+    }
     auto* const document{shown_document()};
     if(document == nullptr || m_query->text().empty())
     {
@@ -332,6 +385,23 @@ void FindBar::watch(oui::TextEdit& document)
 
 void FindBar::refresh()
 {
+    if(auto* const preview{shown_preview()})
+    {
+        if(!is_visible())
+        {
+            return;
+        }
+        if(m_query->text().empty())
+        {
+            preview->clear_search_highlight();
+        }
+        else
+        {
+            preview->set_search_highlight(m_query->text(), search_options());
+        }
+        update_count();
+        return;
+    }
     auto* const document{shown_document()};
     if(document == nullptr || !is_visible())
     {
@@ -351,18 +421,19 @@ void FindBar::refresh()
 void FindBar::update_count()
 {
     auto* const document{shown_document()};
-    if(document == nullptr || !is_visible() || m_query->text().empty())
+    auto* const preview{shown_preview()};
+    if((document == nullptr && preview == nullptr) || !is_visible() || m_query->text().empty())
     {
         m_count->set_text("");
         return;
     }
-    const auto total{document->search_match_count()};
+    const auto total{preview != nullptr ? preview->search_match_count() : document->search_match_count()};
     if(total == 0)
     {
         m_count->set_text(oui::translate("FindBar", "No results"));
         return;
     }
-    const auto selected{document->selected_search_match()};
+    const auto selected{preview != nullptr ? preview->selected_search_match() : document->selected_search_match()};
     m_count->set_text(oui::format_text(oui::translate("FindBar", "{0} of {1}"),
                                        {selected ? std::to_string(*selected) : "?", std::to_string(total)}));
 }
@@ -386,6 +457,20 @@ void FindBar::dismiss_overlays_at(double x, double y)
 oui::TextEdit* FindBar::shown_document() const
 {
     return m_document.get();
+}
+
+oui::MarkdownView* FindBar::shown_preview() const
+{
+    return m_preview.get();
+}
+
+oui::Widget* FindBar::shown_target() const
+{
+    if(auto* const preview{shown_preview()})
+    {
+        return preview;
+    }
+    return shown_document();
 }
 
 void FindBar::toggle_options()
