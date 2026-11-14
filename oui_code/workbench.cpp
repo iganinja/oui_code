@@ -13,6 +13,7 @@
 #include <oui/terminal_themes.h>
 
 #include <algorithm>
+#include <chrono>
 #include <cstdlib>
 #include <memory>
 #include <string>
@@ -150,6 +151,11 @@ int Workbench::run()
     if(!m_options.headless)
     {
         m_unsaved_backup.configure();
+        // What an update left on Windows, the one that ran before it.
+        remove_replaced(running_executable());
+        m_update_check.start(
+            std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch())
+                .count());
     }
     const auto result{m_application.exec()};
     if(!m_options.headless)
@@ -244,7 +250,7 @@ std::vector<oui::MenuItem> Workbench::edit_menu()
 
 std::vector<oui::MenuItem> Workbench::help_menu()
 {
-    return {"help.contents", "help.shortcuts", "help.about"};
+    return {"help.contents", "help.shortcuts", oui::menu_separator(), "help.check_updates", "help.about"};
 }
 
 void Workbench::fill_menus()

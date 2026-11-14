@@ -3,6 +3,7 @@
 #include "dialogs.h"
 #include "help.h"
 #include "task_list.h"
+#include "updates.h"
 
 #include <oui/oui.h>
 #include <oui/terminal_themes.h>
@@ -582,8 +583,15 @@ void Workbench::register_view_commands()
             }
         });
     m_application.commands().bind("view.edit_previewed", {U'e', true, false, true});
-    m_application.commands().register_command("help.about", oui::translate("Commands", "About..."),
-                                              [this] { show_about(m_application); });
+    m_application.commands().register_command(
+        "help.check_updates", oui::translate("Commands", "Check for &Updates..."),
+        [this] { check_for_updates(m_application, m_settings, oui_code_update_program()); });
+    m_application.commands().register_command(
+        "help.about", oui::translate("Commands", "About..."),
+        [this] {
+            show_about(m_application,
+                       [this] { static_cast<void>(m_application.commands().execute("help.check_updates")); });
+        });
     // Ctrl+M cannot work in a terminal, which sends it as Return; F10 opens the menus instead, as in Turbo C,
     // and reaches the menus where a terminal keeps Alt and a letter for itself.
     m_application.commands().bind("view.open_menu", {oui::Key::f10});

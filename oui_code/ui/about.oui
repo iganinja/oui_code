@@ -6,3 +6,4 @@ Window "About OUI Code" context=About
   VSpacer
   Row centered gap=tight
     Button "OK" id=ok default
+    Button "Check for &Updates..." id=updates

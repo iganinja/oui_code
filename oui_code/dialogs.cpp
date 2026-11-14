@@ -196,7 +196,7 @@ void filter_through_command(oui::Application& application, oui::TextEdit& editor
     editor.paste(output);
 }
 
-void show_about(oui::Application& application)
+void show_about(oui::Application& application, const std::function<void()>& check_updates)
 {
     auto ui{build_oui_code_ui(OuiCodeUi::about)};
     ui.get<oui::Label>("version").set_text(
@@ -205,5 +205,17 @@ void show_about(oui::Application& application)
     auto& dialog_reference{*dialog};
     static_cast<void>(ui.get<oui::Button>("ok").on_clicked([&dialog_reference]
                                                            { dialog_reference.close(oui::DialogResult::accepted); }));
+    // It checks once About has closed, as what it shows takes the screen.
+    auto checking{false};
+    static_cast<void>(ui.get<oui::Button>("updates").on_clicked(
+        [&dialog_reference, &checking]
+        {
+            checking = true;
+            dialog_reference.close(oui::DialogResult::accepted);
+        }));
     static_cast<void>(application.show_modal(std::move(dialog)));
+    if(checking && check_updates)
+    {
+        check_updates();
+    }
 }

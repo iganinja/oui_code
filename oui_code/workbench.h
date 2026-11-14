@@ -9,6 +9,7 @@
 #include "recovery.h"
 #include "script_run.h"
 #include "scripting.h"
+#include "updates.h"
 
 #include <oui/application.h>
 #include <oui/completion.h>
@@ -291,6 +292,8 @@ class Workbench
     Editors m_editors{m_application, *m_editor_area};
 
     UnsavedBackup m_unsaved_backup{m_application, m_settings, m_editors};
+    // Once a day as it starts, when Preferences ask.
+    StartupUpdateCheck m_update_check{m_application, m_settings, oui_code_update_program()};
     // What OUI's scripts can use, for the suggestions in scripts.
     olagarro::oui::ScriptApi m_script_api;
     olagarro::oui::Suggester m_suggester;

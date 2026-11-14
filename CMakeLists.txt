@@ -62,7 +62,8 @@ set(OUI_CODE_UI
     oui_code/ui/interactive.oui
     oui_code/ui/main_window.oui
     oui_code/ui/key_test.oui
-    oui_code/ui/interactive_ui.oui)
+    oui_code/ui/interactive_ui.oui
+    oui_code/ui/updates_running.oui)
 add_executable(oui_code
     oui_code/main.cpp
     oui_code/dialogs.cpp
@@ -97,6 +98,7 @@ add_executable(oui_code
     oui_code/session.cpp
     oui_code/task_list.cpp
     oui_code/tools_commands.cpp
+    oui_code/updates.cpp
     oui_code/view_commands.cpp
     oui_code/workbench.cpp)
 target_link_libraries(oui_code PRIVATE olagarro::OUI olagarro::OUIScript)
@@ -224,6 +226,8 @@ if(OUI_CODE_BUILD_TESTS)
         oui_code/documents.cpp
         oui_code/dialogs.cpp
         tests/oui_code/documents_test.cpp
+        oui_code/updates.cpp
+        tests/oui_code/updates_test.cpp
         tests/translation_test.cpp)
     target_include_directories(oui_code_tests PRIVATE oui_code)
     olagarro_embed_files(oui_code_tests FUNCTION embedded_oui_code_help

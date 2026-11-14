@@ -6,6 +6,7 @@ Window "Preferences" context=Preferences
     Label "&Language:" buddy=language
     ComboBox id=language
   Label "The language changes the next time OUI Code starts."
+  CheckButton "Check for updates once a &day, as OUI Code starts" id=check_updates
   VSpacer
   Label "Editor" heading
   CheckButton "&Use spaces for Tab" id=use_spaces

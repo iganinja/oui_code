@@ -1,0 +1,4 @@
+# Help > Check for Updates, while it asks GitHub or downloads: what it is doing, and how to stop it.
+Window "Check for Updates" context=Updates
+  Label id=doing
+  Label "Esc stops it."

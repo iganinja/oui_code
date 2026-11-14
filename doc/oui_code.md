@@ -92,7 +92,8 @@ The `Workbench` constructor builds the window from `ui/main_window.oui`, a windo
 | A `--diff` comparison | `open_comparison` | comparison.cpp |
 | The window shown, closing and shutdown wired | `finish_window` | workbench.cpp |
 
-`run()` starts the unsaved-work copies, runs `Application::exec()`, then saves the session and the panels.
+`run()` starts the unsaved-work copies and the daily update check, when Preferences ask for it, runs
+`Application::exec()`, then saves the session and the panels.
 
 The member functions live in a source per subject:
 
@@ -107,6 +108,7 @@ The member functions live in a source per subject:
 | [search_commands.cpp](../oui_code/search_commands.cpp) | Find in Files and its results, the TODO list of the code, the task list, New Tab |
 | [panel_commands.cpp](../oui_code/panel_commands.cpp) | file operations in the project tree and the explorer |
 | [comparison.cpp](../oui_code/comparison.cpp) | Compare Files, Compare with Saved, the calculator tab |
+| [updates.cpp](../oui_code/updates.cpp) | Check for Updates and the daily check as it starts: GitHub's latest release, fetched with curl, wget or PowerShell, its SHA256SUMS, and the program replaced where the installers put it |
 
 ## Documents, editors, tabs and groups
 

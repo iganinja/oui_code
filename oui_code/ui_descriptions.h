@@ -22,6 +22,7 @@ enum class OuiCodeUi
     main_window,
     key_test,
     interactive_ui,
+    updates_running,
 };
 
 // Defined in the source CMake generates from oui_code/ui, in the order OuiCodeUi names them.

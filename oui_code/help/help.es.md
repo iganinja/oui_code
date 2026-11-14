@@ -490,6 +490,21 @@ El clic derecho pega.
   terminal de pocos colores y, más descansados para la vista donde la terminal muestra todos los colores, Pizarra,
   Papel, Medianoche y Alto contraste. Se guarda para la próxima vez.
 
+## Actualizaciones
+
+**Ayuda > Buscar actualizaciones**, o el botón de **Ayuda > Acerca de**, pregunta a GitHub por la última versión,
+con curl, wget o PowerShell, lo que haya en el sistema. Si es más nueva:
+
+- Instalado con `install.sh` en `~/.local/bin`, o con `install.ps1` en `%LOCALAPPDATA%\Programs\oui_code`,
+  **Instalar** la descarga, la comprueba con el `SHA256SUMS` de la versión y la pone en lugar de esta; es la que se
+  abre la próxima vez.
+- Instalado con APT, en `/usr/bin`, se actualiza con el resto del sistema: `sudo apt update && sudo apt upgrade`.
+- En cualquier otro sitio, como una build propia, no se sustituye: **Novedades** abre la página de la versión.
+
+Con **Buscar actualizaciones una vez al día** activado, en Preferencias, OUI Code pregunta al arrancar, como mucho
+una vez al día, y no dice nada salvo que haya una versión nueva. Viene desactivado: OUI Code solo sale a la red
+cuando se le pide.
+
 ## En una ventana
 
 OUI Code en su variante GUI se abre también en una ventana del escritorio: desde el menú del escritorio, o

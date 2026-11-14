@@ -5,6 +5,7 @@
 #include <oui/text_edit.h>
 
 #include <filesystem>
+#include <functional>
 #include <string>
 
 // OUI Code's own dialogs, and the options of the ones OUI has.
@@ -13,8 +14,9 @@
 void show_markdown(olagarro::oui::Application& application, const std::string& title, std::string markdown,
                    const std::string& placement_key);
 void show_palette(olagarro::oui::Application& application);
-// Help > About: the version, and who made it.
-void show_about(olagarro::oui::Application& application);
+// Help > About: the version, and who made it, and a button that closes it to check for updates with
+// `check_updates`.
+void show_about(olagarro::oui::Application& application, const std::function<void()>& check_updates);
 // OUI Code's file dialogs: the file types an editor offers, and where on screen each kind was left.
 [[nodiscard]] olagarro::oui::FileDialogOptions file_dialog_options(olagarro::oui::FileDialogMode mode,
                                                                    const std::filesystem::path& folder);

@@ -58,6 +58,7 @@ void show_preferences(oui::Application& application, oui::Settings& settings, Ed
     keep("hot_exit", "hot_exit", false, [](bool) {});
     keep("backup", "backup_unsaved", true, [&unsaved_backup](bool) { unsaved_backup.configure(); });
     keep("task_lists", "open_task_list_files", true, [](bool) {});
+    keep("check_updates", "check_for_updates", false, [](bool) {});
     // A number is kept as it is written, when it is one within its bounds.
     const auto keep_number{
         [&ui, &settings](std::string_view id, const char* setting, int value, int least, int most, auto&& then)

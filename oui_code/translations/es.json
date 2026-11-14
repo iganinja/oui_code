@@ -3,7 +3,8 @@
     "About": {
       "About OUI Code": "Acerca de OUI Code",
       "OK": "Aceptar",
-      "Version {0}": "Versión {0}"
+      "Version {0}": "Versión {0}",
+      "Check for &Updates...": "Buscar &actualizaciones..."
     },
     "Calculator": {
       "Calculator": "Calculadora"
@@ -103,7 +104,8 @@
       "Run Text Command...": "Ejecutar un comando de texto...",
       "Edit the Previewed File": "Editar el archivo de la vista previa",
       "Template: Tool of Your Own (tool, run)": "Plantilla: herramienta propia (tool, run)",
-      "Open &as Task List": "A&brir como lista de tareas"
+      "Open &as Task List": "A&brir como lista de tareas",
+      "Check for &Updates...": "Buscar &actualizaciones..."
     },
     "Compare": {
       "Compare Files": "Comparar archivos",
@@ -299,7 +301,8 @@
       "System language": "Idioma del sistema",
       "The language changes the next time OUI Code starts.": "El idioma cambia la próxima vez que se abra OUI Code.",
       "&Use spaces for Tab": "&Usar espacios al tabular",
-      "Open files named *tasks*.md as &task lists, when they hold only tasks": "Abrir como listas de &tareas los archivos *tasks*.md que solo tengan tareas"
+      "Open files named *tasks*.md as &task lists, when they hold only tasks": "Abrir como listas de &tareas los archivos *tasks*.md que solo tengan tareas",
+      "Check for updates once a &day, as OUI Code starts": "Buscar actualizaciones una vez al &día, al arrancar OUI Code"
     },
     "ReplaceDialog": {
       "Cancel": "Cancelar",
@@ -422,6 +425,30 @@
       "Mark as &Done": "Marcar como re&suelta",
       "Mark as &Pending": "Marcar como &pendiente",
       "Pr&iority": "Pr&ioridad"
+    },
+    "Updates": {
+      "Check for Updates": "Buscar actualizaciones",
+      "Esc stops it.": "Esc lo detiene.",
+      "There is no curl, wget or PowerShell here to download with.": "No hay curl, wget ni PowerShell con los que descargar.",
+      "OK": "Aceptar",
+      "Open the Release's Page": "Abrir la página de la versión",
+      "Downloading {0} {1}...": "Descargando {0} {1}...",
+      "{0} {1} could not be downloaded.": "No se ha podido descargar {0} {1}.",
+      "The release lists no sum for {0}.": "La versión no da la suma de {0}.",
+      "What came is not what the release's sum says: it was left out.": "Lo descargado no coincide con la suma de la versión: se ha descartado.",
+      "{0} {1} is installed: it is the one that starts the next time.": "{0} {1} está instalado: es el que se abrirá la próxima vez.",
+      "{0} {1} is out; this one is {2}.": "Ha salido {0} {1}; este es {2}.",
+      "What Is New": "Novedades",
+      "Install it in place of this one?": "¿Instalarlo en lugar de este?",
+      "Install": "Instalar",
+      "Not Now": "Ahora no",
+      "APT installed it, and updates it with the rest of the system:": "Lo instaló APT, que lo actualiza con el resto del sistema:",
+      "This copy is not where the installers put it, so it is not replaced: the release's page has the new one.": "Esta copia no está donde la ponen los instaladores, así que no se sustituye: la nueva está en la página de la versión.",
+      "It could not take the place of {0}: {1}": "No ha podido sustituir a {0}: {1}",
+      "Asking GitHub for the latest {0}...": "Preguntando a GitHub por la última versión de {0}...",
+      "{0} could not ask GitHub for the latest version.": "{0} no ha podido preguntar a GitHub por la última versión.",
+      "GitHub's answer names no release.": "La respuesta de GitHub no nombra ninguna versión.",
+      "{0} {1} is the latest version.": "{0} {1} es la última versión."
     }
   },
   "language": "es",

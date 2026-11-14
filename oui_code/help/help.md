@@ -471,6 +471,21 @@ right click pastes.
   of few colours, and, softer on the eyes where the terminal shows every colour, Slate, Paper, Midnight and High
   Contrast. It is kept for the next time.
 
+## Updates
+
+**Help > Check for Updates**, or the button in **Help > About**, asks GitHub for the latest version, with curl,
+wget or PowerShell, whichever the system has. When it is newer:
+
+- Installed by `install.sh` in `~/.local/bin`, or by `install.ps1` in `%LOCALAPPDATA%\Programs\oui_code`, **Install**
+  downloads it, checks it against the release's `SHA256SUMS` and puts it in place of this one; it is the one that
+  starts the next time.
+- Installed by APT, in `/usr/bin`, it is updated with the rest of the system: `sudo apt update && sudo apt upgrade`.
+- Anywhere else, as a build of your own, it is not replaced: **What Is New** opens the release's page.
+
+With **Check for updates once a day** on, in Preferences, OUI Code asks as it starts, at most once a day, and says
+nothing unless there is a newer version. It is off unless you turn it on: OUI Code goes to the network only when
+asked.
+
 ## In a window
 
 OUI Code in its GUI kind also opens in a desktop window: from the desktop's menu, or typing `oui_code --window` in
