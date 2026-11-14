@@ -76,8 +76,14 @@ TEST(OuiCodeTaskListTests, TellsTaskListsFromOtherFilesByName)
 {
     EXPECT_TRUE(is_task_list_file("/p/tasks.md"));
     EXPECT_TRUE(is_task_list_file("/p/release.tasks.md"));
+    // *tasks*.md: "tasks" anywhere in the name before .md.
+    EXPECT_TRUE(is_task_list_file("/p/my_tasks.md"));
+    EXPECT_TRUE(is_task_list_file("/p/tasks-2026.md"));
     EXPECT_FALSE(is_task_list_file("/p/README.md"));
     EXPECT_FALSE(is_task_list_file("/p/.tasks.md"));
+    EXPECT_FALSE(is_task_list_file("/p/tasks.txt"));
+    EXPECT_FALSE(is_task_list_file("/p/task.md"));
+    EXPECT_FALSE(is_task_list_file("/p/.md"));
 }
 
 TEST(OuiCodeTaskListTests, KeepsTheDayATaskWasDone)

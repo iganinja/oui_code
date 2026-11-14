@@ -504,6 +504,49 @@ void Workbench::register_view_commands()
             open_markdown_preview(*editor, std::string{tabs_reference.title(index)});
         });
     m_application.commands().bind("view.markdown_preview", {oui::Key::f9});
+    // The file the document is opened as a task list instead, in its place, when its text is tasks and nothing more:
+    // as a task list it is kept as one, and the rest would go.
+    m_application.commands().register_command(
+        "view.open_as_task_list", oui::translate("Commands", "Open &as Task List"),
+        [this]
+        {
+            auto& group{m_editors.active()};
+            const auto index{group.tabs.selected_index()};
+            auto* const editor{selected_document_editor(group.tabs)};
+            if(editor == nullptr || index >= group.documents.size())
+            {
+                return;
+            }
+            const auto title{oui::translate("Tasks", "Open as Task List")};
+            const auto path{group.documents[index].path};
+            if(!path)
+            {
+                show_error(m_application, title,
+                           oui::translate("Tasks", "Only a file opens as a task list: save it first."));
+                return;
+            }
+            if(!holds_only_tasks(editor->text()))
+            {
+                show_error(m_application, title,
+                           oui::format_text(oui::translate("Tasks", "{0} holds more than tasks: kept as a task list, "
+                                                                    "the rest of it would be lost."),
+                                            {oui::utf8_of(path->filename())}));
+                return;
+            }
+            // Closed as any tab is, asking about what is not saved; kept, it stays a document.
+            static_cast<void>(m_application.commands().execute("file.close_tab"));
+            for(const auto& each : m_editors.groups())
+            {
+                for(const auto& document : each.documents)
+                {
+                    if(document.path == path && document.preview_of.get() == nullptr)
+                    {
+                        return;
+                    }
+                }
+            }
+            open_task_list(m_application, m_editors, *path, nullptr);
+        });
     // From a preview, the file it shows open to edit: the one a link took it to, or the document it previews.
     m_application.commands().register_command(
         "view.edit_previewed", oui::translate("Commands", "Edit the Previewed File"),
@@ -626,22 +669,22 @@ void Workbench::register_view_commands()
 
 std::vector<oui::MenuItem> Workbench::view_menu()
 {
-    std::vector<oui::MenuItem> view_items{
-        "view.command_palette",
-        oui::menu_separator(),
-        "view.toggle_menu",
-        "view.toggle_project",
-        "view.toggle_explorer",
-        "view.distraction_free",
-        "view.split_editor",
-        "view.go_to_group",
-        "view.word_wrap",
-        "view.suggest_as_you_type",
-        "view.markdown_preview",
-        "view.code_todos",
-        "view.task_list",
-        oui::menu_separator(),
-        oui::menu_submenu(oui::translate("Menu", "S&yntax"), [this] { return syntax_menu(); })};
+    std::vector<oui::MenuItem> view_items{"view.command_palette",
+                                          oui::menu_separator(),
+                                          "view.toggle_menu",
+                                          "view.toggle_project",
+                                          "view.toggle_explorer",
+                                          "view.distraction_free",
+                                          "view.split_editor",
+                                          "view.go_to_group",
+                                          "view.word_wrap",
+                                          "view.suggest_as_you_type",
+                                          "view.markdown_preview",
+                                          "view.code_todos",
+                                          "view.task_list",
+                                          "view.open_as_task_list",
+                                          oui::menu_separator(),
+                                          oui::menu_submenu(oui::translate("Menu", "S&yntax"), [this] { return syntax_menu(); })};
 #ifdef OUI_CODE_WINDOW
     if(m_options.window_screen != nullptr)
     {

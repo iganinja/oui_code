@@ -499,8 +499,12 @@ bool open_file_at_path(oui::Application& application, Editors& editors, oui::Fol
                        std::filesystem::path& current_folder, const std::filesystem::path& file,
                        oui::Settings& settings, EditorGroup* into, OpenAs as)
 {
-    // A task list opens as one, not as its text, unless its text is what is asked for.
-    if(as == OpenAs::task_list || (as == OpenAs::natural && is_task_list_file(file)))
+    // A task list opens as one, not as its text, unless its text is what is asked for: one named as one, when the
+    // preferences say so, if it holds nothing but tasks or is not there yet.
+    std::error_code missing;
+    if(as == OpenAs::task_list ||
+       (as == OpenAs::natural && settings.bool_value("open_task_list_files", true) && is_task_list_file(file) &&
+        (!std::filesystem::exists(file, missing) || could_be_task_list(file))))
     {
         open_task_list(application, editors, file, into);
         return true;

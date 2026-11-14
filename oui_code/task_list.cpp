@@ -318,9 +318,14 @@ std::filesystem::path tasks_file(const std::optional<std::filesystem::path>& pro
 bool is_task_list_file(const std::filesystem::path& file)
 {
     const auto name{oui::utf8_of(file.filename())};
-    constexpr std::string_view suffix{".tasks.md"};
-    return name == "tasks.md" ||
-           (name.size() > suffix.size() && name.compare(name.size() - suffix.size(), suffix.size(), suffix) == 0);
+    constexpr std::string_view suffix{".md"};
+    // *tasks*.md, but not a hidden one.
+    if(name.empty() || name.front() == '.' || name.size() <= suffix.size() ||
+       name.compare(name.size() - suffix.size(), suffix.size(), suffix) != 0)
+    {
+        return false;
+    }
+    return std::string_view{name}.substr(0, name.size() - suffix.size()).find("tasks") != std::string_view::npos;
 }
 
 TasksView::TasksView(oui::Application& application, std::filesystem::path file)

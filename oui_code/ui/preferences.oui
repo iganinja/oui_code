@@ -17,6 +17,7 @@ Window "Preferences" context=Preferences
   CheckButton "&Reload files changed on disk automatically" id=reload
   CheckButton "&Keep unsaved changes on exit and reopen them next time" id=hot_exit
   CheckButton "&Back up unsaved changes, to survive a crash" id=backup
+  CheckButton "Open files named *tasks*.md as &task lists, when they hold only tasks" id=task_lists
   Grid columns=content,fill gap=tight
     Label "Back up &every (seconds):" buddy=backup_interval
     LineEdit id=backup_interval

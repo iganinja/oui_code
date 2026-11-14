@@ -53,7 +53,8 @@ struct Task
 // Where a project keeps its tasks, at its top so they show and go with it; without a project, beside the settings.
 [[nodiscard]] std::filesystem::path tasks_file(const std::optional<std::filesystem::path>& project,
                                                const std::filesystem::path& settings_folder);
-// Whether a file holds a task list rather than text to edit: one named tasks.md, or anything.tasks.md.
+// Whether a file is named as a task list rather than text to edit: *tasks*.md, as tasks.md, release.tasks.md or
+// my_tasks.md, but not a hidden one.
 [[nodiscard]] bool is_task_list_file(const std::filesystem::path& file);
 // Today, as a done task keeps it.
 [[nodiscard]] std::string today();

@@ -424,8 +424,23 @@ Every change is saved at once in `tasks.md` at the top of the project, as Markdo
 in git: a `- [ ] title` line for each task, `- [x]` once done with the day it was done after it, its priority before the title as todo.txt writes it, `(A)`
 urgent, `(B)` high and `(D)` low, with nothing for a normal one, and its note under it indented by two spaces. Without
 a project the list is kept beside the settings. **Save As** keeps a list anywhere else, under a name that ends in
-`.tasks.md`; opening a file named `tasks.md` or ending that way opens it as a task list again. Task lists come back
-with the rest of the session.
+`.tasks.md`. A file whose name is `*tasks*.md`, as `tasks.md`, `release.tasks.md` or `my_tasks.md`, opens as a task
+list when it holds nothing but tasks, unless **Edit > Preferences** says not to; any other Markdown file of tasks opens
+as one with **View > Open as Task List**, in place of its text. Task lists come back with the rest of the session.
+
+A task list written by hand:
+
+```markdown
+# Tasks
+
+- [ ] (A) Fix the crash on save
+  It happens with a file on a USB stick.
+
+  Seen on Windows only.
+- [ ] Write the help
+- [ ] (D) Tidy the icons
+- [x] 2026-10-03 Release 1.2
+```
 
 ## A shell in a tab
 

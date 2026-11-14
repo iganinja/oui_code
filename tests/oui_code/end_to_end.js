@@ -381,6 +381,26 @@ test("A script in the tools folder that is no tool is said, and the rest load", 
     expect("what is wrong", shown.find("tools/broken.js is in the tools folder, but is no tool") !== null, true);
 });
 
+test("View > Open as Task List shows a Markdown file of tasks as a task list, and one with more stays text", async () => {
+    // Alt+V opens the View menu, and A is the letter of Open as Task List there.
+    const lists = {"notes.md": "# Notes\n\n- [ ] Buy cables\n- [x] Call the bank\n",
+        "story.md": "# Story\n\nOnce upon a time.\n\n- [ ] Finish it\n"};
+    const shown = await session(ouiCode, ["notes.md"], lists, ["\x1bv", "a"]);
+    expect("its tab, counting what is left", shown.find("notes.md (1)") !== null, true);
+    expect("the task", shown.find("Buy cables") !== null, true);
+    const kept = await session(ouiCode, ["story.md"], lists, ["\x1bv", "a"]);
+    expect("why not", kept.find("story.md holds more than tasks") !== null, true);
+});
+
+test("A file named *tasks*.md opens as a task list when it holds only tasks", async () => {
+    const lists = {"my_tasks.md": "- [ ] Water the plants\n", "tasks_notes.md": "Some notes.\n\n- [ ] One\n"};
+    const shown = await session(ouiCode, ["my_tasks.md"], lists, []);
+    expect("as a task list", shown.find("my_tasks.md (1)") !== null, true);
+    const text = await session(ouiCode, ["tasks_notes.md"], lists, []);
+    expect("as text, nothing of it lost", text.find("Some notes.") !== null, true);
+    expect("not as a task list", text.find("tasks_notes.md (1)"), null);
+});
+
 test("Ctrl+T offers every kind of tab: the calculator among them", async () => {
     const shown = await session(ouiCode, ["left.txt"], files, ["\x14"]);
     for (const title of ["New File", "New Terminal", "Calculator", "Interactive Script", "Interactive UI",

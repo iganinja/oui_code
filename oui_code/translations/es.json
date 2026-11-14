@@ -102,7 +102,8 @@
       "Template: Script After Generate (processGeneratedCode)": "Plantilla: script tras Generar (processGeneratedCode)",
       "Run Text Command...": "Ejecutar un comando de texto...",
       "Edit the Previewed File": "Editar el archivo de la vista previa",
-      "Template: Tool of Your Own (tool, run)": "Plantilla: herramienta propia (tool, run)"
+      "Template: Tool of Your Own (tool, run)": "Plantilla: herramienta propia (tool, run)",
+      "Open &as Task List": "A&brir como lista de tareas"
     },
     "Compare": {
       "Compare Files": "Comparar archivos",
@@ -297,7 +298,8 @@
       "&Spaces per Tab:": "&Espacios por tabulador:",
       "System language": "Idioma del sistema",
       "The language changes the next time OUI Code starts.": "El idioma cambia la próxima vez que se abra OUI Code.",
-      "&Use spaces for Tab": "&Usar espacios al tabular"
+      "&Use spaces for Tab": "&Usar espacios al tabular",
+      "Open files named *tasks*.md as &task lists, when they hold only tasks": "Abrir como listas de &tareas los archivos *tasks*.md que solo tengan tareas"
     },
     "ReplaceDialog": {
       "Cancel": "Cancelar",
@@ -408,7 +410,10 @@
       "Title:": "Título:",
       "Urgent": "Urgente",
       "What is there to do?": "¿Qué hay que hacer?",
-      "Write what there is to do.": "Escribe qué hay que hacer."
+      "Write what there is to do.": "Escribe qué hay que hacer.",
+      "Open as Task List": "Abrir como lista de tareas",
+      "Only a file opens as a task list: save it first.": "Solo un archivo se abre como lista de tareas: guárdalo antes.",
+      "{0} holds more than tasks: kept as a task list, the rest of it would be lost.": "{0} tiene más que tareas: guardado como lista de tareas, se perdería lo demás."
     },
     "TasksMenu": {
       "&New Task": "&Nueva tarea",

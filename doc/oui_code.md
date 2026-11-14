@@ -302,7 +302,9 @@ and calls `after_event` after each event, from its event observer (`watch_events
 - **Markdown preview** (view_commands.cpp): a `MarkdownView` following a document. A link to another Markdown file is
   read in the same tab, with back and forward (`PreviewReading`); a web address goes to the browser.
 - **Task list** ([task_list.cpp](../oui_code/task_list.cpp)): `TasksView` over a Markdown file of `- [ ]`
-  lines, `tasks.md` at the project's top, saved at every change. `view.code_todos` lists the code's TODO, FIXME, XXX
+  lines, `tasks.md` at the project's top, saved at every change. A file named `*tasks*.md` opens as one when it holds
+  only tasks (`is_task_list_file`, `could_be_task_list`) and the setting `open_task_list_files` is on;
+  `view.open_as_task_list` turns the document shown into one, in its tab's place. `view.code_todos` lists the code's TODO, FIXME, XXX
   and HACK comments as Find in Files lists matches.
 - **Calculator** (comparison.cpp): OUI's `CalculatorView`, its entries kept in the session.
 - **New Tab** (Ctrl+T, search_commands.cpp): a list of every kind of tab there is.
