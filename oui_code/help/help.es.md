@@ -1,8 +1,11 @@
 # OUI Code
 
 Un editor de texto para la terminal, hecho con OUI. Funciona igual en local que por SSH, y no necesita nada
-instalado aparte de sí mismo. Pulsa **Esc** para cerrar esta ayuda; **Izquierda** y **Derecha**, o **Ctrl+Re Pág** y
-**Ctrl+Av Pág**, pasan de una parte a otra, y **Re Pág**, **Av Pág**, **Inicio** y **Fin** recorren cada una.
+instalado aparte de sí mismo. Pulsa **Esc** para cerrar esta ayuda. A la izquierda están sus temas: **Arriba**
+y **Abajo** pasan de uno a otro, e **Intro** o **Tab** van a su texto, que **Re Pág**, **Av Pág**, **Inicio** y
+**Fin** recorren. Al escribir se buscan temas por lo que dicen, en el campo de encima, sin exigir mucho: cada palabra
+escrita, con mayúsculas o sin ellas y con tildes o sin ellas, en el título de un tema, o sus letras en orden en él, o
+en su texto, donde se resalta.
 
 ## Moverse
 

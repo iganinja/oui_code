@@ -1,9 +1,11 @@
 # OUI Code
 
 A text editor for the terminal, built on OUI. It runs the same locally and over SSH, and needs nothing
-installed besides itself. Press **Esc** to close this help; **Left** and **Right**, or **Ctrl+Page Up** and
-**Ctrl+Page Down**, go from one part to another, and **Page Up**, **Page Down**, **Home** and **End** move
-through each.
+installed besides itself. Press **Esc** to close this help. On the left are its topics: **Up** and
+**Down** go from one to another, and **Enter** or **Tab** to its text, where **Page Up**, **Page Down**, **Home** and
+**End** move through it. Typing finds topics by what they say, in the field over them, loosely: every word typed,
+whatever the case or the accents, in a topic's title, or its letters in order there, or in its text, where it is
+lit up.
 
 ## Getting around
 

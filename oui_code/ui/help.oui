@@ -1,3 +1,8 @@
-# Help (F1): a tab for each section of the manual, which the code makes from it. Shaped as markdown.oui is.
+# Help (F1): the manual's topics on the left, each part and the parts within it, and on the right the one chosen; the
+# field over them finds topics by what they say, as loosely as typing allows. The code fills both from the manual.
 Window "Help" context=Help width=100 max_width=110 height_share=0.9 min_width=40 min_height=10 resizable placement=help
-  Tabs id=tabs fixed
+  Grid rows=content,flex
+    LineEdit id=search placeholder="Search the help"
+    Split id=split ratio=0.3
+      Slot id=topics
+      Slot id=page

@@ -172,6 +172,17 @@ test("A Markdown preview has the colours of the document it shows", async () => 
     expect("the text", previewed.find("Plain words.", 2)?.colours, edited.find("Plain words.", 2)?.colours);
 });
 
+test("The help lists its topics, and typing finds them by what they say, a part within a part at its place", async () => {
+    const listed = await session(ouiCode, ["left.txt"], files, [keys.f1]);
+    const topic = listed.find("Getting around");
+    expect("a topic on the left", topic !== null && topic.column < 10, true);
+    expect("a part within one, indented", listed.find("  Running a script") !== null, true);
+    // Its letters in order find it, and the text shows from its heading.
+    const found = await session(ouiCode, ["left.txt"], files, [keys.f1, "tools own"]);
+    // Under the field, the first row of the text is its heading.
+    expect("at the top of the text", found.row(3).lastIndexOf("Tools of your own") > 30, true);
+});
+
 test("F1 in a comparison opens the help at comparing files", async () => {
     const shown = await session(ouiCode, ["--diff", "left.txt", "right.txt"], files, [keys.f1]);
     expect("its part", shown.find("compares the document you are editing") !== null, true);
@@ -269,7 +280,8 @@ test("Interactive UI comes back after quitting, and F1 there opens its part of t
     await here.remove();
     expect("the tab", back.find("form.oui (interactive)") !== null, true);
     expect("what it builds", back.find("Ask Someone") !== null, true);
-    expect("the help", help.find("opens a tab with a user interface description") !== null, true);
+    // Its part, at the top of the text beside the topics.
+    expect("the help", help.row(3).lastIndexOf("Interactive user interfaces") > 30, true);
 });
 
 test("Tools has the scripts OUI Code loads in a submenu of their own, User Scripts", async () => {

@@ -237,7 +237,8 @@
       "All commands with keys": "Todos los comandos con teclas",
       "Command": "Comando",
       "Help": "Ayuda",
-      "Keys": "Teclas"
+      "Keys": "Teclas",
+      "Search the help": "Buscar en la ayuda"
     },
     "Interactive": {
       "(from before the error)": "(de antes del error)",
