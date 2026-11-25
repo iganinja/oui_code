@@ -513,6 +513,15 @@ void Workbench::register_view_commands()
         {
             auto& group{m_editors.active()};
             const auto index{group.tabs.selected_index()};
+            // A task list goes the other way, to its text, in its place: it saved every change as it was made.
+            if(auto* const view{group.tabs.content_at<TasksView>(index)})
+            {
+                const auto file{view->file()};
+                static_cast<void>(m_application.commands().execute("file.close_tab"));
+                open_from_panel(file, OpenAs::text);
+                refresh_open_as_title();
+                return;
+            }
             auto* const editor{selected_document_editor(group.tabs)};
             if(editor == nullptr || index >= group.documents.size())
             {
@@ -547,7 +556,11 @@ void Workbench::register_view_commands()
                 }
             }
             open_task_list(m_application, m_editors, *path, nullptr);
+            refresh_open_as_title();
         });
+    // The entry says which way it goes from the tab shown: to a task list from its text, or back.
+    m_editors.prepare_tabs([this](oui::TabView& tabs)
+                           { tabs.on_selection_changed([this](std::size_t) { refresh_open_as_title(); }); });
     // From a preview, the file it shows open to edit: the one a link took it to, or the document it previews.
     m_application.commands().register_command(
         "view.edit_previewed", oui::translate("Commands", "Edit the Previewed File"),
@@ -914,4 +927,13 @@ void Workbench::end_recent_tab_steps()
     {
         group.tabs.end_recent_steps();
     }
+}
+
+void Workbench::refresh_open_as_title()
+{
+    auto& tabs{m_editors.active().tabs};
+    const auto as_tasks{tabs.content_at<TasksView>(tabs.selected_index()) != nullptr};
+    m_application.commands().set_title("view.open_as_task_list",
+                                       as_tasks ? oui::translate("Commands", "Open &as Text")
+                                                : oui::translate("Commands", "Open &as Task List"));
 }

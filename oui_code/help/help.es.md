@@ -421,7 +421,8 @@ la derecha:
 
 | Tecla | Acción |
 |-------|--------|
-| Intro, Insert o el botón **+ Añadir tarea** | Tarea nueva, tras la marcada, con su prioridad |
+| Intro, Insert o el botón **+ Añadir tarea** | Tarea nueva, tras la marcada, con su prioridad; luego se escribe en su nota |
+| Alt+A | Tarea nueva, desde cualquier parte de la pestaña: la nota, la búsqueda o la lista |
 | Espacio, o un clic en su casilla | Hecha, o pendiente otra vez: pasa a la otra pestaña |
 | F6 | Ver las tareas resueltas, o las pendientes |
 | F2 | Renombrar |
@@ -439,25 +440,28 @@ tu orden, así que funciona cuando la lista de pendientes lo muestra entero y si
 prioridad de cada tarea en columnas.
 
 Cada cambio se guarda al momento en `tasks.md`, en la raíz del proyecto, en Markdown, para leerlo o editarlo a mano
-o llevarlo en git: una línea `- [ ] título` por tarea, `- [x]` cuando está hecha seguido del día en que se hizo, su prioridad delante del título como en todo.txt, `(A)`
-urgente, `(B)` alta y `(D)` baja, sin nada si es normal, y su nota debajo con dos espacios de sangría. Sin proyecto, la lista se guarda junto a los ajustes. **Guardar como** lleva una lista a cualquier otro
+o llevarlo en git: una línea `- [ ] título` por tarea, `- [x]` cuando está hecha seguido del día en que se hizo, su prioridad delante del título, `(urgent)`,
+`(high)`, `(normal)` o `(low)`, en inglés sea cual sea el idioma, y su nota debajo con dos espacios de sangría. Una
+tarea escrita sin prioridad es normal, y también se leen las `(A)` a `(D)` de todo.txt y de listas anteriores, que
+desde entonces se escriben con palabras. Sin proyecto, la lista se guarda junto a los ajustes. **Guardar como** lleva una lista a cualquier otro
 sitio, con un nombre acabado en `.tasks.md`. Un archivo cuyo nombre es `*tasks*.md`, como `tasks.md`,
 `release.tasks.md` o `mis_tasks.md`, se abre como lista de tareas si no tiene más que tareas, salvo que **Edición >
 Preferencias** diga que no; cualquier otro Markdown de tareas se abre como lista con **Ver > Abrir como lista de
-tareas**, en lugar de su texto. Las listas de tareas vuelven con el resto de la sesión.
+tareas**, en lugar de su texto, y donde se muestra una lista de tareas la misma entrada es **Abrir como texto**, que
+muestra su archivo como texto. Las listas de tareas vuelven con el resto de la sesión.
 
 Una lista de tareas escrita a mano:
 
 ```markdown
 # Tasks
 
-- [ ] (A) Arreglar el cierre al guardar
+- [ ] (urgent) Arreglar el cierre al guardar
   Pasa con un archivo en un USB.
 
   Solo visto en Windows.
-- [ ] Escribir la ayuda
-- [ ] (D) Ordenar los iconos
-- [x] 2026-10-03 Publicar la 1.2
+- [ ] (normal) Escribir la ayuda
+- [ ] (low) Ordenar los iconos
+- [x] 2026-10-03 (high) Publicar la 1.2
 ```
 
 ## Una shell en una pestaña

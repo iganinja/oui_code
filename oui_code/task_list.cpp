@@ -49,6 +49,29 @@ constexpr std::string_view note_indent{"  "};
     return std::nullopt;
 }
 
+// The priorities as a file writes them, in English whatever the language, most urgent first.
+constexpr std::array<std::string_view, 4> priority_words{"urgent", "high", "normal", "low"};
+
+// The priority a title starts with and how much of it says so, its space included: "(high) ", or as todo.txt and
+// earlier lists wrote it, "(A) " to "(D) ". None when it starts with none.
+[[nodiscard]] std::optional<std::pair<Priority, std::size_t>> priority_mark(std::string_view title)
+{
+    if(title.size() >= 4 && title[0] == '(' && title[2] == ')' && title[3] == ' ' && title[1] >= 'A' &&
+       title[1] <= 'D')
+    {
+        return std::pair{static_cast<Priority>(title[1] - 'A'), std::size_t{4}};
+    }
+    for(std::size_t index{}; index < priority_words.size(); ++ index)
+    {
+        const auto mark{"(" + std::string{priority_words[index]} + ") "};
+        if(title.substr(0, mark.size()) == mark)
+        {
+            return std::pair{static_cast<Priority>(index), mark.size()};
+        }
+    }
+    return std::nullopt;
+}
+
 // The priorities as a box offers them, most urgent first.
 [[nodiscard]] std::vector<std::string> priority_names()
 {
@@ -214,11 +237,10 @@ std::vector<Task> parse_tasks(std::string_view text)
                 task.done_on = std::string{title.substr(0, 10)};
                 title.remove_prefix(11);
             }
-            if(title.size() >= 4 && title[0] == '(' && title[2] == ')' && title[3] == ' ' && title[1] >= 'A' &&
-               title[1] <= 'D')
+            if(const auto marked{priority_mark(title)})
             {
-                task.priority = static_cast<Priority>(title[1] - 'A');
-                title.remove_prefix(4);
+                task.priority = marked->first;
+                title.remove_prefix(marked->second);
             }
             task.title = std::string{title};
             tasks.push_back(std::move(task));
@@ -290,10 +312,7 @@ std::string format_tasks(const std::vector<Task>& tasks)
         {
             text += task.done_on + " ";
         }
-        if(task.priority != Priority::normal)
-        {
-            text += std::string{"("} + static_cast<char>('A' + static_cast<int>(task.priority)) + ") ";
-        }
+        text += "(" + std::string{priority_words[static_cast<std::size_t>(task.priority)]} + ") ";
         text += task.title + "\n";
         std::size_t start{};
         while(!task.note.empty() && start <= task.note.size())
@@ -474,8 +493,29 @@ void TasksView::focus_list()
     m_application.focus(*m_list);
 }
 
+namespace
+{
+
+[[nodiscard]] bool is_add_task_key(const oui::Event& event)
+{
+    const auto* const text{std::get_if<oui::TextEvent>(&event)};
+    return text != nullptr && text->alt && !text->control && (text->codepoint == U'a' || text->codepoint == U'A');
+}
+
+} // namespace
+
+bool TasksView::claims_key(const oui::Event& event) const
+{
+    return is_add_task_key(event);
+}
+
 bool TasksView::handle_event(const oui::Event& event)
 {
+    if(is_add_task_key(event))
+    {
+        add_task();
+        return true;
+    }
     const auto* const key{std::get_if<oui::KeyEvent>(&event)};
     if(key != nullptr && key->key == oui::Key::escape &&
        (m_note->is_focused() || m_search->is_focused() || m_priority->is_focused() || m_title->is_focused()))
@@ -760,6 +800,11 @@ void TasksView::add_task()
     show_done(false);
     show_tasks(at);
     save();
+    // Its note is what comes next to write.
+    if(selected() == at)
+    {
+        m_application.focus(*m_note);
+    }
 }
 
 void TasksView::rename_task()

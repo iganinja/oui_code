@@ -41,22 +41,34 @@ TEST(OuiCodeTaskListTests, WritesWhatItReadsBack)
     }
 }
 
-TEST(OuiCodeTaskListTests, ReadsAndWritesPrioritiesAsTodoTxtDoes)
+TEST(OuiCodeTaskListTests, WritesPrioritiesAsWordsAndReadsTheLettersOfBefore)
 {
-    const auto tasks{parse_tasks(
-        "- [ ] (A) Urgent\n- [x] (B) Soon\n- [ ] (C) Normal\n- [ ] (D) Some day\n- [ ] (E) Not a priority\n")};
-    ASSERT_EQ(tasks.size(), 5u);
+    const auto tasks{parse_tasks("- [ ] (urgent) Urgent\n- [x] (high) Soon\n- [ ] (normal) Normal\n- [ ] (low) Some day\n"
+                                 "- [ ] Unmarked\n- [ ] (A) Was urgent\n- [ ] (B) Was high\n- [ ] (C) Was normal\n"
+                                 "- [ ] (D) Was low\n- [ ] (E) Not a priority\n- [ ] (soon) Nor this\n")};
+    ASSERT_EQ(tasks.size(), 11u);
     EXPECT_EQ(tasks[0].priority, Priority::urgent);
     EXPECT_EQ(tasks[0].title, "Urgent");
     EXPECT_EQ(tasks[1].priority, Priority::high);
     EXPECT_EQ(tasks[2].priority, Priority::normal);
+    EXPECT_EQ(tasks[2].title, "Normal");
     EXPECT_EQ(tasks[3].priority, Priority::low);
     EXPECT_EQ(tasks[4].priority, Priority::normal);
-    EXPECT_EQ(tasks[4].title, "(E) Not a priority");
-    // A normal task is written with no mark.
+    EXPECT_EQ(tasks[5].priority, Priority::urgent);
+    EXPECT_EQ(tasks[5].title, "Was urgent");
+    EXPECT_EQ(tasks[6].priority, Priority::high);
+    EXPECT_EQ(tasks[7].priority, Priority::normal);
+    EXPECT_EQ(tasks[8].priority, Priority::low);
+    EXPECT_EQ(tasks[9].priority, Priority::normal);
+    EXPECT_EQ(tasks[9].title, "(E) Not a priority");
+    EXPECT_EQ(tasks[10].title, "(soon) Nor this");
+    // Every task is written with its priority, as a word; the letters are only read.
     const auto text{format_tasks(tasks)};
-    EXPECT_NE(text.find("- [ ] Normal\n"), std::string::npos);
-    EXPECT_NE(text.find("- [ ] (D) Some day\n"), std::string::npos);
+    EXPECT_NE(text.find("- [ ] (normal) Unmarked\n"), std::string::npos);
+    EXPECT_NE(text.find("- [ ] (urgent) Was urgent\n"), std::string::npos);
+    EXPECT_NE(text.find("- [ ] (low) Was low\n"), std::string::npos);
+    EXPECT_NE(text.find("- [x] (high) Soon\n"), std::string::npos);
+    EXPECT_EQ(text.find("(A)"), std::string::npos);
     const auto again{parse_tasks(text)};
     ASSERT_EQ(again.size(), tasks.size());
     for(std::size_t index{}; index < tasks.size(); ++ index)
@@ -96,7 +108,7 @@ TEST(OuiCodeTaskListTests, KeepsTheDayATaskWasDone)
     EXPECT_TRUE(tasks[1].done_on.empty());
     // Only a done task has a day: an open one keeps it as part of its title.
     EXPECT_EQ(tasks[2].title, "2026-10-03 Not a day");
-    EXPECT_NE(format_tasks(tasks).find("- [x] 2026-10-03 (B) Buy cables\n"), std::string::npos);
+    EXPECT_NE(format_tasks(tasks).find("- [x] 2026-10-03 (high) Buy cables\n"), std::string::npos);
     EXPECT_EQ(today().size(), 10u);
 }
 

@@ -403,7 +403,8 @@ much as it needs, as a ticket would. The list is on the left and the note of the
 
 | Key | Action |
 |-----|--------|
-| Enter, Insert or the **+ Add Task** button | New task, after the selected one, with its priority |
+| Enter, Insert or the **+ Add Task** button | New task, after the selected one, with its priority; then its note is where you write |
+| Alt+A | New task, from anywhere in the tab: the note, the search or the list |
 | Space, or a click on its box | Done, or not done again: it moves to the other tab |
 | F6 | Show the tasks done, or those pending |
 | F2 | Rename |
@@ -421,25 +422,27 @@ right click on a task opens a menu with the same as the keys. Over the note, **T
 change what the task is and how soon it wants doing; the list shows each task's box, name and priority in columns.
 
 Every change is saved at once in `tasks.md` at the top of the project, as Markdown, to read or edit by hand or keep
-in git: a `- [ ] title` line for each task, `- [x]` once done with the day it was done after it, its priority before the title as todo.txt writes it, `(A)`
-urgent, `(B)` high and `(D)` low, with nothing for a normal one, and its note under it indented by two spaces. Without
+in git: a `- [ ] title` line for each task, `- [x]` once done with the day it was done after it, its priority before the title, `(urgent)`,
+`(high)`, `(normal)` or `(low)`, in English whatever the language, and its note under it indented by two spaces. A task written with no priority is normal, and the `(A)` to `(D)` of todo.txt
+and of earlier lists are read too, written as words from then on. Without
 a project the list is kept beside the settings. **Save As** keeps a list anywhere else, under a name that ends in
 `.tasks.md`. A file whose name is `*tasks*.md`, as `tasks.md`, `release.tasks.md` or `my_tasks.md`, opens as a task
 list when it holds nothing but tasks, unless **Edit > Preferences** says not to; any other Markdown file of tasks opens
-as one with **View > Open as Task List**, in place of its text. Task lists come back with the rest of the session.
+as one with **View > Open as Task List**, in place of its text, and where a task list is shown the same entry is
+**Open as Text**, which shows its file as text instead. Task lists come back with the rest of the session.
 
 A task list written by hand:
 
 ```markdown
 # Tasks
 
-- [ ] (A) Fix the crash on save
+- [ ] (urgent) Fix the crash on save
   It happens with a file on a USB stick.
 
   Seen on Windows only.
-- [ ] Write the help
-- [ ] (D) Tidy the icons
-- [x] 2026-10-03 Release 1.2
+- [ ] (normal) Write the help
+- [ ] (low) Tidy the icons
+- [x] 2026-10-03 (high) Release 1.2
 ```
 
 ## A shell in a tab

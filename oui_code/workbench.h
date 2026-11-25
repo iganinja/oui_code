@@ -127,6 +127,8 @@ class Workbench
     [[nodiscard]] std::vector<olagarro::oui::MenuItem> recent_folders_menu();
     // Opens a file the user picked, from a panel, a list or a menu, and adds it to the recent files.
     void open_from_panel(const std::filesystem::path& file, OpenAs as = OpenAs::natural);
+    // View > Open as Task List says Open as Text where a task list is shown, which it then opens as.
+    void refresh_open_as_title();
 
     // edit_commands.cpp
     void register_edit_commands();

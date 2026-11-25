@@ -42,8 +42,9 @@ struct Task
 
 // Tasks are kept as Markdown, to read and edit by hand or keep in git: each one a "- [ ] title" line, "- [x]"
 // once done, its note under it indented by two spaces. As todo.txt writes them, a done task has the day it was
-// done first, "- [x] 2026-10-03 title", and a priority goes before the title: "(A)" urgent, "(B)" high, "(D)" low;
-// a normal task has none, or "(C)". Other lines, such as a heading, are left out.
+// done first, "- [x] 2026-10-03 title", and the priority goes before the title, in English: "(urgent)", "(high)",
+// "(normal)" or "(low)". A task with none is normal, and todo.txt's "(A)" to "(D)", which earlier lists wrote, are
+// read as those four. Other lines, such as a heading, are left out.
 [[nodiscard]] std::vector<Task> parse_tasks(std::string_view text);
 [[nodiscard]] std::string format_tasks(const std::vector<Task>& tasks);
 // Whether a text has nothing but tasks, their notes, headings and blank lines, so keeping it as a task list loses
@@ -60,7 +61,7 @@ struct Task
 [[nodiscard]] std::string today();
 
 // The tasks of a file in a tab: the list on the left, the note of the selected one on the right. Every change is
-// saved at once. In the list, Enter or Insert adds a task, Space or a click on its box marks it done or not, F2
+// saved at once. In the list, Enter or Insert adds a task, as Alt+A does anywhere in the tab, Space or a click on its box marks it done or not, F2
 // renames it, Delete removes it, Alt+1 to Alt+4 make it urgent, high, normal or low, Alt+Up and Alt+Down move it,
 // and Tab or a double click go to its note; Escape there comes back. Above the note, a box shows and sets the
 // priority. Over the list, two tabs show the tasks pending and those done, F6 going from one to the other; marking
@@ -100,6 +101,8 @@ class TasksView final : public olagarro::oui::Container
 
     // Escape in the note goes back to the list.
     bool handle_event(const olagarro::oui::Event& event) override;
+    // Alt+A adds a task wherever in the tab the focus is, over the menu whose letter it is in a language.
+    [[nodiscard]] bool claims_key(const olagarro::oui::Event& event) const override;
     [[nodiscard]] olagarro::oui::Size measure(const olagarro::oui::Constraints& constraints) const override;
     void arrange(const olagarro::oui::Rect& bounds) override;
 

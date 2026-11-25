@@ -401,6 +401,29 @@ test("A file named *tasks*.md opens as a task list when it holds only tasks", as
     expect("not as a task list", text.find("tasks_notes.md (1)"), null);
 });
 
+test("View > Open as Text shows a task list's file as its text, in its place", async () => {
+    // The same letter, A, of the same entry, which says where it goes from the tab shown.
+    const lists = {"my_tasks.md": "- [ ] Water the plants\n"};
+    const menu = await session(ouiCode, ["my_tasks.md"], lists, ["\x1bv"]);
+    expect("the entry", menu.find("Open as Text") !== null, true);
+    const shown = await session(ouiCode, ["my_tasks.md"], lists, ["\x1bv", "a"]);
+    expect("its text", shown.find("- [ ] Water the plants") !== null, true);
+    expect("no longer a task list", shown.find("my_tasks.md (1)"), null);
+});
+
+test("Alt+A adds a task from anywhere in the task list's tab, and what is typed next is its note", async () => {
+    // Tab goes to the note of the task, and Alt+A asks for a new one from there.
+    const lists = {"my_tasks.md": "- [ ] Water the plants\n"};
+    const shown = await session(ouiCode, ["my_tasks.md"], lists, ["\t", "\x1ba", "Ring Ana", keys.enter,
+        "about the party"]);
+    expect("the task", shown.find("Ring Ana") !== null, true);
+    expect("counted", shown.find("my_tasks.md (2)") !== null, true);
+    const note = shown.find("about the party");
+    const pending = shown.find("Pending (2)");
+    expect("in its note, beside the list", note !== null && pending !== null && note.column > pending.column + 20,
+           true);
+});
+
 test("Ctrl+T offers every kind of tab: the calculator among them", async () => {
     const shown = await session(ouiCode, ["left.txt"], files, ["\x14"]);
     for (const title of ["New File", "New Terminal", "Calculator", "Interactive Script", "Interactive UI",
