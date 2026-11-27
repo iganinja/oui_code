@@ -169,5 +169,7 @@ Replaces: oui-pack
 done
 
 notices all all > "$release/THIRD_PARTY_NOTICES.txt"
+# The Windows installer that is opened with a double click.
+"$root/tools/make_install_cmd.sh" "$root/install.ps1" "$release/install.cmd"
 (cd "$release" && sha256sum -- * > SHA256SUMS)
 ls -l "$release"

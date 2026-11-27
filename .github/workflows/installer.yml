@@ -1,0 +1,38 @@
+# Tries install.cmd, the installer opened with a double click, on GitHub's Windows: made from install.ps1 as a release
+# makes it, marked as downloaded from the internet as a browser marks it, and run by cmd.exe, it installs OUI Code,
+# oui_run and oui_calc from the latest release where Check for Updates finds them, and says so when it cannot.
+name: Installer
+
+on:
+  push:
+    branches: [master]
+    paths: [install.ps1, tools/make_install_cmd.sh, .github/workflows/installer.yml]
+  workflow_dispatch:
+
+jobs:
+  windows:
+    name: install.cmd on Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Make install.cmd
+        shell: bash
+        run: tools/make_install_cmd.sh install.ps1 "$RUNNER_TEMP/install.cmd"
+      - name: Mark it as downloaded
+        shell: pwsh
+        run: Set-Content -Path "$env:RUNNER_TEMP\install.cmd" -Stream Zone.Identifier -Value "[ZoneTransfer]`r`nZoneId=3"
+      - name: Install with it
+        shell: cmd
+        run: |
+          call "%RUNNER_TEMP%\install.cmd" -All -Gui || exit /b 1
+          if not exist "%LOCALAPPDATA%\Programs\oui_code\oui_code.exe" (echo oui_code.exe was not installed & exit /b 1)
+          if not exist "%LOCALAPPDATA%\Programs\oui_code\oui_run.exe" (echo oui_run.exe was not installed & exit /b 1)
+          if not exist "%LOCALAPPDATA%\Programs\oui_code\oui_calc.exe" (echo oui_calc.exe was not installed & exit /b 1)
+      - name: A failure ends with an error
+        shell: cmd
+        env:
+          OUI_DOWNLOAD_URL: https://github.com/iganinja/oui_code/releases/download/no-such-release
+          OUI_INSTALL_DIR: ${{ runner.temp }}\nowhere
+        run: |
+          call "%RUNNER_TEMP%\install.cmd" -All -Gui && (echo it said nothing failed & exit /b 1)
+          exit /b 0

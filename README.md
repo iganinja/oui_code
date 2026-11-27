@@ -21,11 +21,9 @@ One line in a terminal, for your system:
 curl -fsSL https://raw.githubusercontent.com/iganinja/oui_code/master/install.sh | sh
 ```
 
-**Windows**, in PowerShell
-
-```powershell
-irm https://raw.githubusercontent.com/iganinja/oui_code/master/install.ps1 | iex
-```
+**Windows**: download [install.cmd](https://github.com/iganinja/oui_code/releases/latest/download/install.cmd) and
+open it with a double click. If Windows says it protected the computer, *More info* and *Run anyway* let it run. It
+asks what to install, and puts it in `%LOCALAPPDATA%\Programs\oui_code`, where Help > Check for Updates updates it.
 
 **Debian, Ubuntu and the like**, kept up to date by `apt upgrade`
 
@@ -46,8 +44,8 @@ Intel's.
 Each program comes in two kinds, under the same name: for the terminal, and `gui`, which also opens in a window of
 its own. Typed in a terminal it stays there, and `--window` opens its window; started from the desktop's menu or an
 icon, with no terminal, it opens its window. The installers can also get the whole package, the three programs with
-their licences, and take options to choose without asking: `sh -s -- --all --gui` on Linux and macOS, `-All -Gui` on
-Windows, as the head of each script tells.
+their licences, and take options to choose without asking: `sh -s -- --all --gui` on Linux and macOS, and on
+Windows `install.cmd -All -Gui` in a terminal, as the head of `install.sh` and `install.ps1` tells.
 
 ### APT by hand
 
