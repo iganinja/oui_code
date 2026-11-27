@@ -28,6 +28,8 @@ jobs:
           if not exist "%LOCALAPPDATA%\Programs\oui_code\oui_code.exe" (echo oui_code.exe was not installed & exit /b 1)
           if not exist "%LOCALAPPDATA%\Programs\oui_code\oui_run.exe" (echo oui_run.exe was not installed & exit /b 1)
           if not exist "%LOCALAPPDATA%\Programs\oui_code\oui_calc.exe" (echo oui_calc.exe was not installed & exit /b 1)
+          if not exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OUI Code.lnk" (echo OUI Code is not in the Start menu & exit /b 1)
+          if not exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OUI Calc.lnk" (echo OUI Calc is not in the Start menu & exit /b 1)
       - name: A failure ends with an error
         shell: cmd
         env:

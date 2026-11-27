@@ -15,10 +15,10 @@
 #
 #   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/iganinja/oui_code/master/install.ps1))) -All -Gui
 #
-# The programs go in %LOCALAPPDATA%\Programs\oui_code, which is added to the user's PATH when it is not there. Every
-# download is checked against the release's SHA256SUMS before it is used. OUI_INSTALL_DIR says where programs go
-# instead; OUI_DOWNLOAD_URL where they come from, the latest release unless set. Works in Windows PowerShell 5.1 and
-# in PowerShell 7.
+# The programs go in %LOCALAPPDATA%\Programs\oui_code, which is added to the user's PATH when it is not there, and OUI
+# Code and oui_calc get a shortcut in the Start menu. Every download is checked against the release's SHA256SUMS before
+# it is used. OUI_INSTALL_DIR says where programs go instead; OUI_DOWNLOAD_URL where they come from, the latest release
+# unless set. Works in Windows PowerShell 5.1 and in PowerShell 7.
 param(
     [ValidateSet("oui_code", "oui_run", "oui_calc")]
     [string[]]$Program,
@@ -157,6 +157,19 @@ OUI Code, oui_run and oui_calc: what would you like?
             Move-Item -Force -Path $downloaded[$each] -Destination (Join-Path $target "$name.exe")
             Write-Host "Installed $(Join-Path $target "$name.exe")"
             $installed += $name
+        }
+
+        # A shortcut in the user's Start menu for those that are started as any other program: oui_run runs a script
+        # it is given, and has none. Started from it with no terminal, a gui one opens its window.
+        $titles = @{ "oui_code" = "OUI Code"; "oui_calc" = "OUI Calc" }
+        $menu = [Environment]::GetFolderPath("Programs")
+        $shell = New-Object -ComObject WScript.Shell
+        foreach ($each in $installed) {
+            if (-not $titles.ContainsKey($each)) { continue }
+            $shortcut = $shell.CreateShortcut((Join-Path $menu "$($titles[$each]).lnk"))
+            $shortcut.TargetPath = Join-Path $target "$each.exe"
+            $shortcut.Save()
+            Write-Host "$($titles[$each]) is in the Start menu."
         }
 
         # The folder in the user's PATH, for new terminals, and in this one's.

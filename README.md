@@ -37,9 +37,9 @@ Or download them from the [releases](https://github.com/iganinja/oui_code/releas
 
 They show what there is and ask, then download it, check it against the release's sums and install it, with no
 root and no administrator but for `--apt`: in `~/.local/bin` on Linux and macOS, and on Windows in
-`%LOCALAPPDATA%\Programs\oui_code`, which they add to the PATH. There are programs for Linux and Windows on x86-64,
-for Linux on 64-bit ARM, as a Raspberry Pi 3, 4 or 5 with a 64-bit system, and for macOS on Apple's processors and
-Intel's.
+`%LOCALAPPDATA%\Programs\oui_code`, which they add to the PATH, with OUI Code and oui_calc in the Start menu. There
+are programs for Linux and Windows on x86-64, for Linux on 64-bit ARM, as a Raspberry Pi 3, 4 or 5 with a 64-bit
+system, and for macOS on Apple's processors and Intel's.
 
 Each program comes in two kinds, under the same name: for the terminal, and `gui`, which also opens in a window of
 its own. Typed in a terminal it stays there, and `--window` opens its window; started from the desktop's menu or an
